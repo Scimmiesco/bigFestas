@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\Item\ItemStatus;
+use App\Enums\Item\ItemType;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,8 +44,14 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'enums' =>
             [
-            'item_status' => \App\Enums\Item\ItemStatus::cases(),
-            'item_types'  => \App\Enums\Item\ItemType::cases()
+            'item_status' => collect(ItemStatus::cases())->map(fn ($s) => [
+                    'name' => $s->name,
+                    'value' => $s->value
+            ]),
+            'item_types' => collect(ItemType::cases())->map(fn ($s) => [
+                    'name' => $s->name,
+                    'value' => $s->value
+            ]),
             ],
             'auth' => [
                 'user' => $user,

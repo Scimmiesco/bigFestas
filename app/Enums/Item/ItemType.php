@@ -1,5 +1,5 @@
 <?php
-namespace App\Item\Enums;
+namespace App\Enums\Item;
 
 enum ItemType: string
 {

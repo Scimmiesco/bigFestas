@@ -1,6 +1,11 @@
 import type { Auth } from '@/types/auth';
 import type { Team } from '@/types/teams';
 
+export interface SharedEnum {
+    name: string;
+    value: string;
+}
+
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
     interface ImportMetaEnv {
@@ -19,6 +24,10 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             auth: Auth;
+            enums: {
+                item_status: SharedEnum[];
+                item_types: SharedEnum[];
+            };
             sidebarOpen: boolean;
             currentTeam: Team | null;
             teams: Team[];
