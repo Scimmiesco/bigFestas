@@ -1,6 +1,10 @@
 import type { Auth } from '@/types/auth';
 import type { Team } from '@/types/teams';
 
+export interface SelectOptions {
+    name: string;
+    value: string;
+}
 export interface SharedEnum {
     name: string;
     value: string;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-vue-next';
+import { BookOpen, FolderGit2, LayoutGrid, Boxes } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -16,13 +16,20 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { dashboard } from '@/routes';
+import dashboard from '@/routes/dashboard/index';
+import item from '@/routes/items/index';
 import type { NavItem } from '@/types';
 
 const page = usePage();
 
 const dashboardUrl = computed(() =>
-    page.props.currentTeam ? dashboard(page.props.currentTeam.slug).url : '/',
+    page.props.currentTeam
+        ? dashboard.index(page.props.currentTeam.slug).url
+        : '/',
+);
+
+const itemUrl = computed(() =>
+    page.props.currentTeam ? item.index(page.props.currentTeam.slug).url : '/',
 );
 
 const mainNavItems = computed<NavItem[]>(() => [
@@ -30,6 +37,11 @@ const mainNavItems = computed<NavItem[]>(() => [
         title: 'Dashboard',
         href: dashboardUrl.value,
         icon: LayoutGrid,
+    },
+    {
+        title: 'Estoque',
+        href: itemUrl.value,
+        icon: Boxes,
     },
 ]);
 
