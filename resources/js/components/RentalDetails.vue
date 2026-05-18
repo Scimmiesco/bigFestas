@@ -1,0 +1,330 @@
+<script setup lang="ts">
+import {
+    Layout,
+    Armchair,
+    Snowflake,
+    MapPin,
+    Package,
+    ExternalLink,
+} from 'lucide-vue-next'; // Adicionado ExternalLink
+import { computed } from 'vue';
+
+const props = defineProps<{
+    rental: any; // Tipar de acordo com o seu banco
+}>();
+
+// Mapeamento de ícones para itens individuais
+const iconesMap: Record<string, any> = {
+    cadeira: Armchair,
+    mesa: Layout,
+    cooler: Snowflake,
+    default: Package,
+};
+
+// Lógica para gerar o link de busca do Google Maps baseado no endereço de texto
+const googleMapsUrl = computed(() => {
+    if (!props.rental?.endereco_entrega) return '';
+    // Codifica o endereço de texto para ser usado de forma segura em uma URL
+    return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(props.rental.endereco_entrega)}`;
+});
+
+// Lógica para gerar a URL do iframe do Google Maps
+const googleMapsIframeUrl = computed(() => {
+    if (!props.rental?.endereco_entrega) return '';
+    // Utiliza o modo "place" do Embed API que é gratuito para buscas por texto simples
+    return `https://maps.google.com/maps?q=${encodeURIComponent(props.rental.endereco_entrega)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+});
+
+// Lógica para agrupar e calcular conjuntos e itens extra
+const rentalItemGroups = computed(() => {
+    if (!props.rental?.items) {
+        return {
+            sets: 0,
+            extraTables: 0,
+            extraChairs: 0,
+            coolers: 0,
+            other: [],
+        };
+    }
+
+    let tables = 0;
+    let chairs = 0;
+    let coolers = 0;
+    const other: any[] = [];
+
+    // 1. Contar os itens por tipo
+    props.rental.items.forEach((item: any) => {
+        const tipo = item.tipo?.toLowerCase();
+        const quantidade = item.pivot?.quantidade || item.quantidade || 1;
+
+        if (tipo === 'mesa') {
+            tables += quantidade;
+        } else if (tipo === 'cadeira') {
+            chairs += quantidade;
+        } else if (tipo === 'cooler') {
+            coolers += quantidade;
+        } else {
+            // Outros itens
+            const icone = iconesMap[tipo] || iconesMap.default;
+            other.push({ ...item, icone, quantidade });
+        }
+    });
+
+    // 2. Calcular conjuntos completos (1 mesa + 4 cadeiras)
+    const sets = Math.min(tables, Math.floor(chairs / 4));
+
+    // 3. Calcular itens extra
+    const extraTables = tables - sets;
+    const extraChairs = chairs - sets * 4;
+
+    return { sets, extraTables, extraChairs, coolers, other };
+});
+</script>
+
+<template>
+    <div class="space-y-4">
+        <div
+            class="flex items-center justify-between gap-2 border-b border-amber-100 pb-2"
+        >
+            <div>
+                <h2 class="text-xl font-bold text-amber-100">
+                    {{ rental.cliente_nome }}
+                </h2>
+                <div class="mt-1 flex items-center justify-between">
+                    <p class="font-mono text-sm text-amber-100/70">
+                        Locação #{{ rental.id }}
+                    </p>
+                </div>
+            </div>
+            <div class="flex flex-col-reverse gap-1">
+                <div
+                    class="rounded border border-amber-100 px-2 py-1 text-xs font-bold text-amber-100 uppercase"
+                >
+                    {{ rental.status }}
+                </div>
+                <div
+                    class="rounded border bg-amber-100 px-2 py-1 text-center text-xs font-bold text-black uppercase"
+                >
+                    R$ {{ rental.valor }}
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 bg-black p-2 text-sm md:grid-cols-2">
+            <div class="space-y-1">
+                <span class="font-bold text-amber-100">Entrega:</span>
+                <p class="font-mono text-amber-50/90">
+                    {{
+                        new Date(rental.data_entrega).toLocaleDateString(
+                            'pt-BR',
+                            {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            },
+                        )
+                    }}
+                </p>
+            </div>
+            <div class="space-y-1">
+                <span class="font-bold text-amber-100">Retirada:</span>
+                <p class="font-mono text-amber-50/90">
+                    {{
+                        new Date(rental.data_recolha).toLocaleDateString(
+                            'pt-BR',
+                            {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                            },
+                        )
+                    }}
+                </p>
+            </div>
+            <div class="space-y-1">
+                <span class="font-bold text-amber-100">Endereço:</span>
+                <p
+                    class="mb-2 flex items-start gap-1 font-mono text-amber-50/90"
+                >
+                    <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-amber-100" />
+                    {{ rental.endereco_entrega || 'Não informado' }}
+                </p>
+
+                <!-- SEÇÃO DO MAPA (Botão + Iframe) -->
+                <div v-if="rental.endereco_entrega" class="space-y-2 pt-1">
+                    <!-- Botão para abrir no app/site externo -->
+                    <a
+                        :href="googleMapsUrl"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="inline-flex items-center gap-2 rounded bg-amber-100 px-3 py-1.5 text-xs font-bold text-black uppercase transition-colors hover:bg-amber-200"
+                    >
+                        <MapPin class="h-3.5 w-3.5" />
+                        Abrir no Google Maps
+                        <ExternalLink class="h-3 w-3" />
+                    </a>
+
+                    <!-- Iframe do Mapa Interativo Gratuito -->
+                    <div class="h-52 w-full overflow-hidden rounded">
+                        <iframe
+                            width="100%"
+                            height="100%"
+                            style="border: 0"
+                            loading="lazy"
+                            allowfullscreen
+                            referrerpolicy="no-referrer-when-downgrade"
+                            :src="googleMapsIframeUrl"
+                        ></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-center rounded-sm bg-black p-2">
+            <div
+                v-if="!rental.items || rental.items.length === 0"
+                class="font-mono text-sm text-amber-100/50"
+            >
+                Nenhum item vinculado a esta locação.
+            </div>
+
+            <div v-else class="align-center w-full space-y-5 text-center">
+                <div v-if="rentalItemGroups.sets > 0" class="space-y-2">
+                    <p class="font-mono text-xs font-bold text-amber-100/80">
+                        {{ rentalItemGroups.sets }}x Conjuntos Completos
+                    </p>
+                    <div
+                        class="flex flex-wrap items-center justify-center gap-2"
+                    >
+                        <div
+                            v-for="set in rentalItemGroups.sets"
+                            :key="'set-' + set"
+                            class="flex items-center justify-center rounded-sm border border-amber-100"
+                            title="1 Mesa e 4 Cadeiras"
+                        >
+                            <div
+                                class="grid grid-cols-3 grid-rows-3 place-items-center gap-1"
+                            >
+                                <Armchair
+                                    class="col-start-2 row-start-1 h-4 w-4 text-emerald-500"
+                                />
+
+                                <Armchair
+                                    class="col-start-1 row-start-2 h-4 w-4 -rotate-90 text-emerald-500"
+                                />
+
+                                <Layout
+                                    class="col-start-2 row-start-2 h-6 w-6 text-indigo-500"
+                                />
+
+                                <Armchair
+                                    class="col-start-3 row-start-2 h-4 w-4 rotate-90 text-emerald-500"
+                                />
+
+                                <Armchair
+                                    class="col-start-2 row-start-3 h-4 w-4 -rotate-180 text-emerald-500"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex flex-wrap justify-center gap-3 font-mono text-sm"
+                >
+                    <div
+                        v-if="rentalItemGroups.extraTables > 0"
+                        class="flex flex-col gap-2 rounded-sm"
+                    >
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="font-bold text-amber-50">Mesas</span>
+                            <span class="font-bold text-amber-100/80"
+                                >{{
+                                    rentalItemGroups.extraTables
+                                }}
+                                unidades</span
+                            >
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            <Layout
+                                v-for="n in rentalItemGroups.extraTables"
+                                :key="'extra-table-' + n"
+                                class="h-6 w-6 shrink-0 text-indigo-500 drop-shadow-sm"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="rentalItemGroups.extraChairs > 0"
+                        class="flex flex-col gap-2 rounded-sm"
+                    >
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="font-bold text-amber-50"
+                                >Cadeiras</span
+                            >
+                            <span class="font-bold text-amber-100/80"
+                                >{{
+                                    rentalItemGroups.extraChairs
+                                }}
+                                unidades</span
+                            >
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            <Armchair
+                                v-for="n in rentalItemGroups.extraChairs"
+                                :key="'extra-chair-' + n"
+                                class="h-6 w-6 shrink-0 text-emerald-500 drop-shadow-sm"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="rentalItemGroups.coolers > 0"
+                        class="flex flex-col gap-2 rounded-sm border border-amber-100/10 bg-black/40 px-3 py-2"
+                    >
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="font-bold text-amber-50">Coolers</span>
+                            <span class="font-bold text-amber-100/80"
+                                >{{ rentalItemGroups.coolers }} unidades</span
+                            >
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            <Snowflake
+                                v-for="n in rentalItemGroups.coolers"
+                                :key="'cooler-' + n"
+                                class="h-6 w-6 shrink-0 text-amber-500 drop-shadow-sm"
+                            />
+                        </div>
+                    </div>
+
+                    <div
+                        v-for="item in rentalItemGroups.other"
+                        :key="item.id"
+                        class="flex flex-col gap-2 rounded-sm border border-amber-100/10 bg-black/40 px-3 py-2"
+                    >
+                        <div class="flex items-center justify-between gap-4">
+                            <span class="font-bold text-amber-50">{{
+                                item.nome
+                            }}</span>
+                            <span class="font-bold text-amber-100/80"
+                                >{{ item.quantidade }} unidades</span
+                            >
+                        </div>
+                        <div class="flex flex-wrap gap-1">
+                            <component
+                                :is="item.icone"
+                                v-for="n in item.quantidade"
+                                :key="item.id + '-icon-' + n"
+                                class="h-6 w-6 shrink-0 text-neutral-400 drop-shadow-sm"
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

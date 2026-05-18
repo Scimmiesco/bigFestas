@@ -170,3 +170,14 @@
         @apply bg-background text-foreground;
     }
 }
+
+/* resources/css/app.css */
+@layer components {
+    .btn-primary {
+        @apply rounded-md bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500;
+    }
+
+    .card-padrao {
+        @apply rounded-xl border border-gray-200 bg-white p-6 shadow-sm;
+    }
+}

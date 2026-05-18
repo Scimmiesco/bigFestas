@@ -38,6 +38,7 @@ const form = useForm({
     nome: '',
     tipo: '',
     status: '',
+    quantidade: 1,
     observacoes: '',
 });
 
@@ -64,18 +65,34 @@ const submit = () => {
             class="mt-6 rounded-xl border border-sidebar-border bg-white p-6 shadow-sm dark:bg-sidebar"
         >
             <form @submit.prevent="submit" class="space-y-6">
-                <div class="grid gap-2">
-                    <Label for="nome"
-                        >Nome do Item <span class="text-red-500">*</span></Label
-                    >
-                    <Input
-                        id="nome"
-                        v-model="form.nome"
-                        placeholder="Ex: Cadeira Plástica Branca"
-                        required
-                        autofocus
-                    />
-                    <InputError :message="form.errors.nome" />
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-12">
+                    <div class="grid gap-2 md:col-span-9">
+                        <Label for="nome"
+                            >Nome do Item
+                            <span class="text-red-500">*</span></Label
+                        >
+                        <Input
+                            id="nome"
+                            v-model="form.nome"
+                            placeholder="Ex: Cadeira Plástica Branca"
+                            required
+                            autofocus
+                        />
+                        <InputError :message="form.errors.nome" />
+                    </div>
+
+                    <div class="grid gap-2 md:col-span-3">
+                        <Label for="quantidade">Quantidade</Label>
+                        <Input
+                            id="quantidade"
+                            type="number"
+                            min="1"
+                            max="200"
+                            v-model="form.quantidade"
+                            required
+                        />
+                        <InputError :message="form.errors.quantidade" />
+                    </div>
                 </div>
 
                 <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

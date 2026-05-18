@@ -4,6 +4,8 @@ namespace App\Http\Middleware;
 
 use App\Enums\Item\ItemStatus;
 use App\Enums\Item\ItemType;
+use App\Enums\Payment\PaymentMethods;
+use App\Enums\Payment\PaymentStatus;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -49,6 +51,14 @@ class HandleInertiaRequests extends Middleware
                     'value' => $s->value
             ]),
             'item_types' => collect(ItemType::cases())->map(fn ($s) => [
+                    'name' => $s->name,
+                    'value' => $s->value
+            ]),
+            'payment_types' => collect(PaymentMethods::cases())->map(fn ($s) => [
+                    'name' => $s->name,
+                    'value' => $s->value
+            ]),
+            'payment_status' => collect(PaymentStatus::cases())->map(fn ($s) => [
                     'name' => $s->name,
                     'value' => $s->value
             ]),

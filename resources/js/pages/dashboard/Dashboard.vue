@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
+import DeliveryPlanner from '@/components/DeliveryPlanner.vue';
+import PaymentResume from '@/components/PaymentResume.vue';
 import StockResume from '@/components/StockResume.vue';
 import dashboard from '@/routes/dashboard/index';
 import type { Team } from '@/types';
 
 defineProps<{
-    stockResumeData: string[];
-    fkasasp: string;
+    stockResumeData: any;
+    paymentData: any;
 
     errors?: any;
     name?: string;
@@ -33,13 +35,12 @@ defineOptions({
 
 <template>
     <Head title="Dashboard" />
-
-    <div
-        class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-    >
-        <StockResume></StockResume>
-
-        {{ stockResumeData }}
-        {{ fkasasp }}
+    <div class="flex flex-1 flex-col gap-2 px-2">
+        <PaymentResume :data="paymentData"></PaymentResume>
+        <DeliveryPlanner
+            :agenda-semanal="stockResumeData.agenda_semanal"
+            :team-slug="currentTeam.slug"
+        />
+        <StockResume :data="stockResumeData" />
     </div>
 </template>
