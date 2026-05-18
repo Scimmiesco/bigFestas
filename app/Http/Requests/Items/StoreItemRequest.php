@@ -30,6 +30,7 @@ class StoreItemRequest extends FormRequest
                     'tipo' => ['required', Rule::enum(ItemType::class)],
                     'status' => ['required', Rule::enum(ItemStatus::class)],
                     'observacoes' => ['nullable', 'string', 'max:1000'],
+                    'quantidade' => ['required', 'integer', 'min:1', 'max:200'], // Trava de segurança
         ];
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Requests\Items\StoreItemRequest;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -19,8 +20,8 @@ class ItemController extends Controller
         $items = $current_team->items()->latest()->get()->map(fn ($item) => [
             'id' => $item->id,
             'nome' => $item->nome,
-            'tipo' => $item->tipo->value ?? $item->tipo->name,
-            'status' => $item->status->value ?? $item->status->name,
+            'tipo' => $item->tipo->value,
+            'status' => $item->status->value,
         ]);
 
         return Inertia::render('items/Index', [
@@ -44,9 +45,22 @@ class ItemController extends Controller
             */
         public function store(StoreItemRequest $request, Team $current_team): RedirectResponse
         {
-            $current_team->items()->create($request->validated());
 
-            Inertia::flash('toast', ['type' => 'success', 'message' => __('Item criado com sucesso.')]);
+            $validated = $request->validated();
+
+            $quantidade = $validated['quantidade'] ?? 1;
+            unset($validated['quantidade']);
+
+            DB::transaction(function () use ($current_team, $validated, $quantidade) {
+                        for ($i = 0; $i < $quantidade; $i++) {
+                            $current_team->items()->create($validated);
+                        }
+            });
+
+            Inertia::flash('toast', [
+                        'type' => 'success',
+                        'message' => "{$quantidade} item(ns) criado(s) com sucesso!"
+            ]);
 
             return redirect()->route('items.index', ['current_team' => $current_team->slug]);
         }

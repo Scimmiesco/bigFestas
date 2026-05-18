@@ -4,6 +4,7 @@
 
     use App\Concerns\GeneratesUniqueTeamSlugs;
     use App\Enums\TeamRole;
+    use App\Models\Rental;
     use Database\Factories\TeamFactory;
     use Illuminate\Database\Eloquent\Attributes\Fillable;
     use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -84,11 +85,27 @@
         /**
         * Get all items for this team.
         *
-        * @return HasMany<TeamInvitation, $this>
+        * @return HasMany<Item, $this>
         */
         public function items(): HasMany
         {
             return $this->hasMany(Item::class);
+        }
+
+        /**
+        * Get all rentals for this team.
+        *
+        * @return HasMany<Rental, $this>
+        */
+        public function rentals(): HasMany
+        {
+            return $this->hasMany(Rental::class);
+        }
+
+        public function payment()
+        {
+            // O Time tem vários Pagamentos (Payment), através da Locação (Rental)
+            return $this->hasManyThrough(Payment::class, Rental::class);
         }
 
         /**
