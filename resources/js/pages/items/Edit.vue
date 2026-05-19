@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { Head, usePage } from '@inertiajs/vue3';
 import Heading from '@/components/Heading.vue';
-
 import itemsRoutes from '@/routes/items/index';
 import type { Team } from '@/types';
-import Form from './Partials/Form.vue'; // Ajuste o caminho conforme onde você salvou
+import Form from './Partials/Form.vue'; // Ajuste o caminho
 
 const props = defineProps<{
+    item: any;
     enums?: any;
-    itemTypes?: any; // Algumas controllers mandam solto
+    itemTypes?: any;
     itemStatuses?: any;
 }>();
 
@@ -25,14 +25,13 @@ defineOptions({
                     : '/',
             },
             {
-                title: 'Novo Item',
+                title: 'Editar Item',
                 href: '#',
             },
         ],
     }),
 });
 
-// Consolida os enums caso venham separados da controller
 const combinedEnums = props.enums || {
     item_types: props.itemTypes,
     item_status: props.itemStatuses,
@@ -41,16 +40,20 @@ const combinedEnums = props.enums || {
 
 <template>
     <div>
-        <Head title="Adicionar Novo Item" />
+        <Head title="Editar Item" />
 
         <div class="mx-auto max-w-3xl py-6">
             <Heading
                 variant="small"
-                title="Adicionar Item ao Estoque"
-                description="Preencha os detalhes abaixo para registrar um novo item."
+                title="Editar Item"
+                description="Atualize os detalhes do item selecionado abaixo."
             />
 
-            <Form :enums="combinedEnums" :teamSlug="teamSlug" />
+            <Form
+                :item="props.item"
+                :enums="combinedEnums"
+                :teamSlug="teamSlug"
+            />
         </div>
     </div>
 </template>

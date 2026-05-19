@@ -21,6 +21,13 @@ Route::prefix('{current_team}')
         Route::get('itens', [ItemController::class, 'index'])->name('items.index');
         Route::get('itens/criar', [ItemController::class, 'create'])->name('items.create');
         Route::post('itens', [ItemController::class, 'store'])->name('items.store');
+        Route::get('itens/{id}/editar', [ItemController::class, 'edit'])->name('items.edit');
+        Route::put('itens/{id}', [ItemController::class, 'update'])->name('items.update');
+        Route::put('/itens/lote', [ItemController::class, 'bulkUpdate'])->name('items.bulkUpdate');
+        Route::delete('/itens/{id}', [ItemController::class, 'destroy'])->name('items.destroy');
+
+
+        // ...suas outras rotas (edit, update, destroy)
 
         Route::get('locacoes', [RentalController::class, 'index'])->name('rentals.index');
         Route::get('locacoes/criar', [RentalController::class, 'create'])->name('rentals.create');
