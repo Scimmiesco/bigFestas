@@ -159,11 +159,7 @@ const abrirModalLocacao = async (id: number) => {
 
     <!-- 👇 O Modal (Dialog) que será aberto -->
     <Dialog v-model:open="isModalOpen">
-<<<<<<< HEAD
-        <DialogContent class="border/20 bg-neutral-900 sm:max-w-[600px]">
-=======
         <DialogContent class="max-h-[90vh] border sm:max-w-[600px]">
->>>>>>> 8c7c2e0 (ajustes cores)
             <DialogHeader>
                 <DialogTitle class="tracking-wider"
                     >Detalhes do Agendamento</DialogTitle
@@ -171,11 +167,7 @@ const abrirModalLocacao = async (id: number) => {
             </DialogHeader>
 
             <!-- Loading enquanto o axios busca no banco -->
-<<<<<<< HEAD
-            <div v-if="isLoading" class="0/70 py-12 text-center font-mono">
-=======
             <div v-if="isLoading" class="py-12 text-center font-mono">
->>>>>>> 8c7c2e0 (ajustes cores)
                 Carregando informações...
             </div>
 
