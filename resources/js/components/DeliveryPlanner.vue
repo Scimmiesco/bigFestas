@@ -61,25 +61,23 @@ const abrirModalLocacao = async (id: number) => {
 
 <template>
     <div
-        class="flex max-h-[360px] min-h-[50vh] flex-1 flex-col rounded-sm border-2 border-solid border-amber-100 p-3"
+        class="flex max-h-[360px] min-h-[50vh] flex-1 flex-col rounded-sm border border-solid p-3"
     >
         <!-- Topo fixo da Agenda -->
         <div
-            class="mb-2 flex items-center gap-2 border-b border-solid border-amber-100 pb-2 text-amber-100"
+            class="flex items-center gap-2 rounded border border-b border-solid p-2"
         >
-            <Calendar class="h-5 w-5" />
-            <h3 class="text-xs font-bold tracking-wider uppercase">
-                Agenda da Semana
-            </h3>
+            <Calendar class="h-6 w-6" />
+            <h3 class="font-bold tracking-wider uppercase">Agenda da Semana</h3>
         </div>
 
         <!-- Área de Scroll da lista (Estilo Google Agenda) -->
         <div
-            class="custom-scrollbar flex-1 space-y-3 overflow-y-auto pr-1 font-mono text-xs"
+            class="custom-scrollbar flex-1 space-y-3 overflow-y-auto py-2 font-mono text-xs"
         >
             <div
                 v-if="Object.keys(agendaSemanal).length === 0"
-                class="py-4 text-center text-amber-100"
+                class="py-4 text-center"
             >
                 Nenhuma entrega ou recolha agendada para os próximos dias.
             </div>
@@ -91,7 +89,7 @@ const abrirModalLocacao = async (id: number) => {
             >
                 <!-- Label do Dia (Hoje, Amanhã, Segunda-feira...) -->
                 <div
-                    class="text-md sticky top-0 z-10 rounded-sm bg-amber-100 px-1 font-bold tracking-wide text-black uppercase"
+                    class="text-md sticky top-0 z-10 rounded bg-primary px-2 py-1 font-bold tracking-wide text-primary-foreground uppercase"
                 >
                     {{ dia }}
                 </div>
@@ -103,24 +101,24 @@ const abrirModalLocacao = async (id: number) => {
                         v-for="item in compromissos"
                         :key="`${item.id}-${item.operacao}`"
                         @click="abrirModalLocacao(item.id)"
-                        class="flex cursor-pointer items-center justify-between gap-2 rounded-sm border border-solid p-2 transition-colors hover:bg-neutral-800/30"
+                        class="flex cursor-pointer items-center justify-between gap-2 rounded-sm border border-solid p-2 transition-colors hover:bg-primary-foreground"
                         :class="[
                             item.operacao === 'entrega'
-                                ? 'border-indigo-500'
-                                : 'border-amber-500',
+                                ? 'border-chart-3'
+                                : 'border-chart-5',
                         ]"
                     >
                         <!-- Esquerda (Hora, Ícone e Cliente) -->
                         <div class="flex min-w-0 flex-1 items-center gap-2">
-                            <span class="shrink-0 font-bold text-amber-100">{{
+                            <span class="shrink-0 font-bold">{{
                                 item.horario
                             }}</span>
                             <Truck
                                 class="h-5 w-5 shrink-0"
                                 :class="
                                     item.operacao === 'entrega'
-                                        ? 'text-indigo-500'
-                                        : 'rotate-y-180 text-amber-500'
+                                        ? 'text-chart-3'
+                                        : '0 rotate-y-180 text-chart-5'
                                 "
                             />
                             <span
@@ -133,11 +131,11 @@ const abrirModalLocacao = async (id: number) => {
 
                         <!-- Direita (Tags de Carga e Valor lado a lado) -->
                         <div
-                            class="flex shrink-0 items-center gap-1 font-mono text-[12px]"
+                            class="flex shrink-0 flex-col items-center gap-1 font-mono text-[12px]"
                         >
                             <!-- Tag do Valor -->
                             <div
-                                class="rounded-sm border bg-amber-100 px-1 py-0.5 text-black"
+                                class="rounded-sm border bg-primary px-1 py-0.5 text-primary-foreground"
                             >
                                 <span>{{
                                     new Intl.NumberFormat('pt-BR', {
@@ -148,7 +146,7 @@ const abrirModalLocacao = async (id: number) => {
                             </div>
                             <!-- Tag da Carga -->
                             <div
-                                class="rounded-sm border border-amber-100 px-1 py-0.5 font-bold text-amber-50"
+                                class="rounded-sm border px-1 py-0.5 font-bold"
                             >
                                 {{ item.quantidade }}
                             </div>
@@ -161,20 +159,15 @@ const abrirModalLocacao = async (id: number) => {
 
     <!-- 👇 O Modal (Dialog) que será aberto -->
     <Dialog v-model:open="isModalOpen">
-        <DialogContent
-            class="border-amber-100/20 bg-neutral-900 text-amber-50 sm:max-w-[600px]"
-        >
+        <DialogContent class="max-h-[90vh] border sm:max-w-[600px]">
             <DialogHeader>
-                <DialogTitle class="tracking-wider text-amber-100"
+                <DialogTitle class="tracking-wider"
                     >Detalhes do Agendamento</DialogTitle
                 >
             </DialogHeader>
 
             <!-- Loading enquanto o axios busca no banco -->
-            <div
-                v-if="isLoading"
-                class="py-12 text-center font-mono text-amber-500/70"
-            >
+            <div v-if="isLoading" class="py-12 text-center font-mono">
                 Carregando informações...
             </div>
 
@@ -195,7 +188,6 @@ const abrirModalLocacao = async (id: number) => {
     background: transparent;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #fcd34d; /* amber-300 */
     border-radius: 2px;
 }
 </style>

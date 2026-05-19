@@ -35,7 +35,7 @@ defineOptions({
 
 <template>
     <Head title="Dashboard" />
-    <div class="flex flex-1 flex-col gap-2 px-2">
+    <div class="flex flex-1 flex-col gap-2 p-2">
         <PaymentResume :data="paymentData"></PaymentResume>
         <DeliveryPlanner
             :agenda-semanal="stockResumeData.agenda_semanal"

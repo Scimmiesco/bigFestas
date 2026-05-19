@@ -27,33 +27,28 @@ defineProps<{
         <div class="flex flex-col gap-4 md:flex-row">
             <!-- Bloco: Prontos para Alugar -->
             <div
-                class="flex-1 rounded-sm border-2 border-solid border-amber-100 px-4 py-3"
+                class="flex-1 rounded-sm border border-2 border-solid px-4 py-3"
             >
                 <div class="flex h-full flex-col justify-between">
-                    <p
-                        class="text-xs font-bold tracking-wider text-amber-100 uppercase"
-                    >
+                    <p class="text-xs font-bold tracking-wider uppercase">
                         Prontos para Alugar
                     </p>
                     <div class="mt-4 mb-2 flex items-baseline gap-2">
-                        <h2 class="text-5xl font-black text-amber-100">
+                        <h2 class="text-5xl font-black">
                             {{ data.jogos_disponiveis }}
                         </h2>
                         <span
-                            class="text-sm font-bold tracking-wider text-amber-100 uppercase"
+                            class="text-sm font-bold tracking-wider uppercase"
                         >
                             Jogos
                         </span>
-                        <p
-                            v-if="data.cadeiras_avulsas != 0"
-                            class="text-amber-100"
-                        >
+                        <p v-if="data.cadeiras_avulsas != 0" class="">
                             e
                             <b class="text-2xl">{{ data.cadeiras_avulsas }} </b>
                             avulsas
                         </p>
                     </div>
-                    <p class="font-mono text-xs font-medium text-amber-100/80">
+                    <p class="font-mono text-xs font-medium">
                         (1 mesa / 4 cadeiras disponíveis)
                     </p>
                 </div>
