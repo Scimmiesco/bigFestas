@@ -83,17 +83,25 @@ const rentalItemGroups = computed(() => {
 
 <template>
     <div class="space-y-4">
+<<<<<<< HEAD
         <div
             class="flex items-center justify-between gap-2 border border-b pb-2"
         >
+=======
+        <div class="flex items-center justify-between gap-2 pb-2">
+>>>>>>> 8c7c2e0 (ajustes cores)
             <div>
                 <h2 class="text-xl font-bold">
                     {{ rental.cliente_nome }}
                 </h2>
                 <div class="mt-1 flex items-center justify-between">
+<<<<<<< HEAD
                     <p class="/70 font-mono text-sm">
                         Locação #{{ rental.id }}
                     </p>
+=======
+                    <p class="font-mono text-sm">Locação #{{ rental.id }}</p>
+>>>>>>> 8c7c2e0 (ajustes cores)
                 </div>
             </div>
             <div class="flex flex-col-reverse gap-1">
@@ -103,17 +111,23 @@ const rentalItemGroups = computed(() => {
                     {{ rental.status }}
                 </div>
                 <div
-                    class="rounded border bg-amber-100 px-2 py-1 text-center text-xs font-bold text-black uppercase"
+                    class="rounded border bg-amber-100 px-2 py-1 text-center text-xs font-bold uppercase"
                 >
                     R$ {{ rental.valor }}
                 </div>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 gap-4 bg-black p-2 text-sm md:grid-cols-2">
+        <div
+            class="grid grid-cols-1 gap-4 rounded border p-2 text-sm md:grid-cols-2"
+        >
             <div class="space-y-1">
                 <span class="font-bold">Entrega:</span>
+<<<<<<< HEAD
                 <p class="/90 font-mono">
+=======
+                <p class="font-mono">
+>>>>>>> 8c7c2e0 (ajustes cores)
                     {{
                         new Date(rental.data_entrega).toLocaleDateString(
                             'pt-BR',
@@ -145,21 +159,27 @@ const rentalItemGroups = computed(() => {
                     }}
                 </p>
             </div>
+<<<<<<< HEAD
             <div class="space-y-1">
                 <span class="font-bold">Endereço:</span>
                 <p class="/90 mb-2 flex items-start gap-1 font-mono">
+=======
+            <div class="space-y-1 md:col-span-2">
+                <span class="font-bold">Endereço:</span>
+                <p class="flex items-start gap-1 font-mono">
+>>>>>>> 8c7c2e0 (ajustes cores)
                     <MapPin class="mt-0.5 h-4 w-4 shrink-0" />
                     {{ rental.endereco_entrega || 'Não informado' }}
                 </p>
 
                 <!-- SEÇÃO DO MAPA (Botão + Iframe) -->
-                <div v-if="rental.endereco_entrega" class="space-y-2 pt-1">
+                <div v-if="rental.endereco_entrega" class="space-y-2">
                     <!-- Botão para abrir no app/site externo -->
                     <a
                         :href="googleMapsUrl"
                         target="_blank"
                         rel="noopener noreferrer"
-                        class="inline-flex items-center gap-2 rounded bg-amber-100 px-3 py-1.5 text-xs font-bold text-black uppercase transition-colors hover:bg-amber-200"
+                        class="inline-flex items-center gap-2 rounded bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground uppercase transition-colors"
                     >
                         <MapPin class="h-3.5 w-3.5" />
                         Abrir no Google Maps
@@ -182,17 +202,25 @@ const rentalItemGroups = computed(() => {
             </div>
         </div>
 
-        <div class="flex items-center justify-center rounded-sm bg-black p-2">
+        <div class="flex items-center justify-center rounded border p-2">
             <div
                 v-if="!rental.items || rental.items.length === 0"
+<<<<<<< HEAD
                 class="/50 font-mono text-sm"
+=======
+                class="font-mono text-sm"
+>>>>>>> 8c7c2e0 (ajustes cores)
             >
                 Nenhum item vinculado a esta locação.
             </div>
 
             <div v-else class="align-center w-full space-y-5 text-center">
                 <div v-if="rentalItemGroups.sets > 0" class="space-y-2">
+<<<<<<< HEAD
                     <p class="/80 font-mono text-xs font-bold">
+=======
+                    <p class="font-mono text-xs font-bold">
+>>>>>>> 8c7c2e0 (ajustes cores)
                         {{ rentalItemGroups.sets }}x Conjuntos Completos
                     </p>
                     <div
@@ -201,30 +229,34 @@ const rentalItemGroups = computed(() => {
                         <div
                             v-for="set in rentalItemGroups.sets"
                             :key="'set-' + set"
+<<<<<<< HEAD
                             class="flex items-center justify-center rounded-sm border"
+=======
+                            class="flex items-center justify-center rounded border"
+>>>>>>> 8c7c2e0 (ajustes cores)
                             title="1 Mesa e 4 Cadeiras"
                         >
                             <div
                                 class="grid grid-cols-3 grid-rows-3 place-items-center gap-1"
                             >
                                 <Armchair
-                                    class="col-start-2 row-start-1 h-4 w-4 text-emerald-500"
+                                    class="col-start-2 row-start-1 h-4 w-4 text-chart-1"
                                 />
 
                                 <Armchair
-                                    class="col-start-1 row-start-2 h-4 w-4 -rotate-90 text-emerald-500"
+                                    class="col-start-1 row-start-2 h-4 w-4 -rotate-90 text-chart-3"
                                 />
 
                                 <Layout
-                                    class="col-start-2 row-start-2 h-6 w-6 text-indigo-500"
+                                    class="col-start-2 row-start-2 h-6 w-6 text-chart-2"
                                 />
 
                                 <Armchair
-                                    class="col-start-3 row-start-2 h-4 w-4 rotate-90 text-emerald-500"
+                                    class="col-start-3 row-start-2 h-4 w-4 rotate-90 text-chart-3"
                                 />
 
                                 <Armchair
-                                    class="col-start-2 row-start-3 h-4 w-4 -rotate-180 text-emerald-500"
+                                    class="col-start-2 row-start-3 h-4 w-4 -rotate-180 text-chart-3"
                                 />
                             </div>
                         </div>
@@ -251,7 +283,7 @@ const rentalItemGroups = computed(() => {
                             <Layout
                                 v-for="n in rentalItemGroups.extraTables"
                                 :key="'extra-table-' + n"
-                                class="h-6 w-6 shrink-0 text-indigo-500 drop-shadow-sm"
+                                class="h-6 w-6 shrink-0 text-chart-2 drop-shadow-sm"
                             />
                         </div>
                     </div>
@@ -273,14 +305,18 @@ const rentalItemGroups = computed(() => {
                             <Armchair
                                 v-for="n in rentalItemGroups.extraChairs"
                                 :key="'extra-chair-' + n"
-                                class="h-6 w-6 shrink-0 text-emerald-500 drop-shadow-sm"
+                                class="h-6 w-6 shrink-0 text-chart-3 drop-shadow-sm"
                             />
                         </div>
                     </div>
 
                     <div
                         v-if="rentalItemGroups.coolers > 0"
+<<<<<<< HEAD
                         class="border/10 flex flex-col gap-2 rounded-sm border bg-black/40 px-3 py-2"
+=======
+                        class="border/10 flex flex-col gap-2 rounded-sm border px-3 py-2"
+>>>>>>> 8c7c2e0 (ajustes cores)
                     >
                         <div class="flex items-center justify-between gap-4">
                             <span class="font-bold">Coolers</span>
@@ -300,7 +336,11 @@ const rentalItemGroups = computed(() => {
                     <div
                         v-for="item in rentalItemGroups.other"
                         :key="item.id"
+<<<<<<< HEAD
                         class="border/10 flex flex-col gap-2 rounded-sm border bg-black/40 px-3 py-2"
+=======
+                        class="border/10 flex flex-col gap-2 rounded-sm border px-3 py-2"
+>>>>>>> 8c7c2e0 (ajustes cores)
                     >
                         <div class="flex items-center justify-between gap-4">
                             <span class="font-bold">{{ item.nome }}</span>
@@ -313,7 +353,7 @@ const rentalItemGroups = computed(() => {
                                 :is="item.icone"
                                 v-for="n in item.quantidade"
                                 :key="item.id + '-icon-' + n"
-                                class="h-6 w-6 shrink-0 text-neutral-400 drop-shadow-sm"
+                                class="h-6 w-6 shrink-0 text-neutral-400"
                             />
                         </div>
                     </div>
