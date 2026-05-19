@@ -34,7 +34,7 @@ defineOptions({
     <Head :title="titulo" />
 
     <div class="mx-auto max-w-4xl px-4 py-8">
-        <div class="rounded-md border border-amber-100 p-2 shadow-sm">
+        <div class="rounded-md border p-2 shadow-sm">
             <RentalDetails :rental="rental" />
         </div>
     </div>

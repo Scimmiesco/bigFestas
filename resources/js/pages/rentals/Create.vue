@@ -204,9 +204,7 @@ const submit = () => {
                 <div
                     class="rounded-lg border border-amber-200 bg-amber-50 p-5 dark:border-amber-900/50 dark:bg-amber-900/10"
                 >
-                    <h3
-                        class="mb-4 text-lg font-medium text-amber-900 dark:text-amber-500"
-                    >
+                    <h3 class="dark:0 mb-4 text-lg font-medium text-amber-900">
                         Itens para Alugar
                     </h3>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">

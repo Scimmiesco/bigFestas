@@ -84,21 +84,21 @@ const rentalItemGroups = computed(() => {
 <template>
     <div class="space-y-4">
         <div
-            class="flex items-center justify-between gap-2 border-b border-amber-100 pb-2"
+            class="flex items-center justify-between gap-2 border border-b pb-2"
         >
             <div>
-                <h2 class="text-xl font-bold text-amber-100">
+                <h2 class="text-xl font-bold">
                     {{ rental.cliente_nome }}
                 </h2>
                 <div class="mt-1 flex items-center justify-between">
-                    <p class="font-mono text-sm text-amber-100/70">
+                    <p class="/70 font-mono text-sm">
                         Locação #{{ rental.id }}
                     </p>
                 </div>
             </div>
             <div class="flex flex-col-reverse gap-1">
                 <div
-                    class="rounded border border-amber-100 px-2 py-1 text-xs font-bold text-amber-100 uppercase"
+                    class="rounded border px-2 py-1 text-xs font-bold uppercase"
                 >
                     {{ rental.status }}
                 </div>
@@ -112,8 +112,8 @@ const rentalItemGroups = computed(() => {
 
         <div class="grid grid-cols-1 gap-4 bg-black p-2 text-sm md:grid-cols-2">
             <div class="space-y-1">
-                <span class="font-bold text-amber-100">Entrega:</span>
-                <p class="font-mono text-amber-50/90">
+                <span class="font-bold">Entrega:</span>
+                <p class="/90 font-mono">
                     {{
                         new Date(rental.data_entrega).toLocaleDateString(
                             'pt-BR',
@@ -129,8 +129,8 @@ const rentalItemGroups = computed(() => {
                 </p>
             </div>
             <div class="space-y-1">
-                <span class="font-bold text-amber-100">Retirada:</span>
-                <p class="font-mono text-amber-50/90">
+                <span class="font-bold">Retirada:</span>
+                <p class="/90 font-mono">
                     {{
                         new Date(rental.data_recolha).toLocaleDateString(
                             'pt-BR',
@@ -146,11 +146,9 @@ const rentalItemGroups = computed(() => {
                 </p>
             </div>
             <div class="space-y-1">
-                <span class="font-bold text-amber-100">Endereço:</span>
-                <p
-                    class="mb-2 flex items-start gap-1 font-mono text-amber-50/90"
-                >
-                    <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-amber-100" />
+                <span class="font-bold">Endereço:</span>
+                <p class="/90 mb-2 flex items-start gap-1 font-mono">
+                    <MapPin class="mt-0.5 h-4 w-4 shrink-0" />
                     {{ rental.endereco_entrega || 'Não informado' }}
                 </p>
 
@@ -187,14 +185,14 @@ const rentalItemGroups = computed(() => {
         <div class="flex items-center justify-center rounded-sm bg-black p-2">
             <div
                 v-if="!rental.items || rental.items.length === 0"
-                class="font-mono text-sm text-amber-100/50"
+                class="/50 font-mono text-sm"
             >
                 Nenhum item vinculado a esta locação.
             </div>
 
             <div v-else class="align-center w-full space-y-5 text-center">
                 <div v-if="rentalItemGroups.sets > 0" class="space-y-2">
-                    <p class="font-mono text-xs font-bold text-amber-100/80">
+                    <p class="/80 font-mono text-xs font-bold">
                         {{ rentalItemGroups.sets }}x Conjuntos Completos
                     </p>
                     <div
@@ -203,7 +201,7 @@ const rentalItemGroups = computed(() => {
                         <div
                             v-for="set in rentalItemGroups.sets"
                             :key="'set-' + set"
-                            class="flex items-center justify-center rounded-sm border border-amber-100"
+                            class="flex items-center justify-center rounded-sm border"
                             title="1 Mesa e 4 Cadeiras"
                         >
                             <div
@@ -241,8 +239,8 @@ const rentalItemGroups = computed(() => {
                         class="flex flex-col gap-2 rounded-sm"
                     >
                         <div class="flex items-center justify-between gap-4">
-                            <span class="font-bold text-amber-50">Mesas</span>
-                            <span class="font-bold text-amber-100/80"
+                            <span class="font-bold">Mesas</span>
+                            <span class="/80 font-bold"
                                 >{{
                                     rentalItemGroups.extraTables
                                 }}
@@ -263,10 +261,8 @@ const rentalItemGroups = computed(() => {
                         class="flex flex-col gap-2 rounded-sm"
                     >
                         <div class="flex items-center justify-between gap-4">
-                            <span class="font-bold text-amber-50"
-                                >Cadeiras</span
-                            >
-                            <span class="font-bold text-amber-100/80"
+                            <span class="font-bold">Cadeiras</span>
+                            <span class="/80 font-bold"
                                 >{{
                                     rentalItemGroups.extraChairs
                                 }}
@@ -284,11 +280,11 @@ const rentalItemGroups = computed(() => {
 
                     <div
                         v-if="rentalItemGroups.coolers > 0"
-                        class="flex flex-col gap-2 rounded-sm border border-amber-100/10 bg-black/40 px-3 py-2"
+                        class="border/10 flex flex-col gap-2 rounded-sm border bg-black/40 px-3 py-2"
                     >
                         <div class="flex items-center justify-between gap-4">
-                            <span class="font-bold text-amber-50">Coolers</span>
-                            <span class="font-bold text-amber-100/80"
+                            <span class="font-bold">Coolers</span>
+                            <span class="/80 font-bold"
                                 >{{ rentalItemGroups.coolers }} unidades</span
                             >
                         </div>
@@ -296,7 +292,7 @@ const rentalItemGroups = computed(() => {
                             <Snowflake
                                 v-for="n in rentalItemGroups.coolers"
                                 :key="'cooler-' + n"
-                                class="h-6 w-6 shrink-0 text-amber-500 drop-shadow-sm"
+                                class="0 h-6 w-6 shrink-0 drop-shadow-sm"
                             />
                         </div>
                     </div>
@@ -304,13 +300,11 @@ const rentalItemGroups = computed(() => {
                     <div
                         v-for="item in rentalItemGroups.other"
                         :key="item.id"
-                        class="flex flex-col gap-2 rounded-sm border border-amber-100/10 bg-black/40 px-3 py-2"
+                        class="border/10 flex flex-col gap-2 rounded-sm border bg-black/40 px-3 py-2"
                     >
                         <div class="flex items-center justify-between gap-4">
-                            <span class="font-bold text-amber-50">{{
-                                item.nome
-                            }}</span>
-                            <span class="font-bold text-amber-100/80"
+                            <span class="font-bold">{{ item.nome }}</span>
+                            <span class="/80 font-bold"
                                 >{{ item.quantidade }} unidades</span
                             >
                         </div>

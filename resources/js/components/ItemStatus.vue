@@ -47,14 +47,12 @@ const getIcone = (tipo: string) => {
 </script>
 
 <template>
-    <div
-        class="flex-1 rounded-sm border border-solid border-amber-100 px-3 py-2"
-    >
+    <div class="flex-1 rounded-sm border border-solid px-3 py-2">
         <div class="flex items-center justify-between p-1 pb-3">
             <div class="flex items-center gap-2">
                 <component
                     :is="getIcone(item.tipo)"
-                    class="h-6 w-6 text-amber-600"
+                    class="h-6 w-6 text-chart-5"
                 />
                 <h3 class="font-bold tracking-wider uppercase">
                     {{ item.nome }}
@@ -68,16 +66,16 @@ const getIcone = (tipo: string) => {
         <div class="space-y-3 text-sm">
             <div>
                 <div
-                    class="flex justify-between pb-2 font-mono font-bold text-emerald-500"
+                    class="flex justify-between pb-2 font-mono font-bold text-chart-2"
                 >
                     <span class="flex items-center gap-1">
                         <CheckCircle2 class="h-5 w-5" /> Disponíveis
                     </span>
                     <span>{{ item.disponivel }}</span>
                 </div>
-                <div class="h-2 w-full rounded-full bg-amber-100">
+                <div class="h-2 w-full rounded-full bg-primary">
                     <div
-                        class="h-2 rounded-full bg-emerald-500 transition-all duration-500"
+                        class="h-2 rounded-full bg-chart-2 transition-all duration-500"
                         :style="{
                             width: `${getPercentage(item.disponivel, item.total)}%`,
                         }"
@@ -87,16 +85,16 @@ const getIcone = (tipo: string) => {
 
             <div>
                 <div
-                    class="flex justify-between pb-2 font-mono font-bold text-blue-500"
+                    class="flex justify-between pb-2 font-mono font-bold text-chart-3"
                 >
                     <span class="flex items-center gap-1">
                         <Truck class="h-5 w-5" /> Alugadas
                     </span>
                     <span>{{ item.alugado }}</span>
                 </div>
-                <div class="h-2 w-full rounded-full bg-amber-100">
+                <div class="h-2 w-full rounded-full bg-primary">
                     <div
-                        class="h-2 rounded-full bg-blue-500 transition-all duration-500"
+                        class="h-2 rounded-full bg-chart-3 transition-all duration-500"
                         :style="{
                             width: `${getPercentage(item.alugado, item.total)}%`,
                         }"
@@ -106,16 +104,16 @@ const getIcone = (tipo: string) => {
 
             <div>
                 <div
-                    class="flex justify-between pb-2 font-mono font-bold text-rose-500"
+                    class="flex justify-between pb-2 font-mono font-bold text-chart-1"
                 >
                     <span class="flex items-center gap-1">
                         <Wrench class="h-5 w-5" /> Manutenção
                     </span>
                     <span>{{ item.manutencao }}</span>
                 </div>
-                <div class="h-2 w-full rounded-full bg-amber-100">
+                <div class="h-2 w-full rounded-full bg-primary">
                     <div
-                        class="h-2 rounded-full bg-rose-500 transition-all duration-500"
+                        class="h-2 rounded-full bg-chart-1 transition-all duration-500"
                         :style="{
                             width: `${getPercentage(item.manutencao, item.total)}%`,
                         }"
