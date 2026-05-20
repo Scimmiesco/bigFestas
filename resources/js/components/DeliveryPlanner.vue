@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, Truck } from 'lucide-vue-next';
+import { Calendar, Truck, Ellipsis } from 'lucide-vue-next';
 import { ref } from 'vue';
 import RentalDetails from '@/components/RentalDetails.vue';
 import {
@@ -150,7 +150,7 @@ const confirmarAcaoFinal = async () => {
                             class="absolute inset-y-0 right-0 flex w-24 items-center justify-center transition-colors"
                             :class="
                                 item.operacao === 'entrega'
-                                    ? 'bg-green-600 hover:bg-green-700'
+                                    ? 'bg-green-600 hover:bg-chart-2'
                                     : 'bg-blue-600 hover:bg-blue-700'
                             "
                         >
@@ -176,14 +176,7 @@ const confirmarAcaoFinal = async () => {
                                     `${dia}-${item.id}-${item.operacao}`,
                                 )
                             "
-                            @mousedown="onDragStart"
-                            @mouseup="
-                                onDragEnd(
-                                    $event,
-                                    `${dia}-${item.id}-${item.operacao}`,
-                                )
-                            "
-                            class="relative flex cursor-pointer items-center justify-between gap-2 bg-background p-2 transition-transform duration-300 hover:bg-muted/50"
+                            class="relative flex cursor-pointer items-center justify-between gap-2 bg-background p-2 transition-transform duration-300"
                             :class="
                                 swipedItemKey ===
                                 `${dia}-${item.id}-${item.operacao}`
@@ -231,6 +224,19 @@ const confirmarAcaoFinal = async () => {
                                     {{ item.quantidade }}
                                 </div>
                             </div>
+                            <span
+                                :class="
+                                    item.operacao === 'entrega'
+                                        ? 'text-chart-2'
+                                        : ''
+                                "
+                            >
+                                {{
+                                    item.operacao === 'entrega'
+                                        ? 'Entregue'
+                                        : 'Retirado'
+                                }}
+                            </span>
                         </div>
                     </div>
                 </div>
