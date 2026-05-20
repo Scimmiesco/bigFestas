@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Calendar, Truck } from 'lucide-vue-next';
-
 import { ref } from 'vue';
 import RentalDetails from '@/components/RentalDetails.vue';
 import {
@@ -20,17 +19,15 @@ interface AgendaItem {
     valor: string;
 }
 
-// 👇 Atribuindo o defineProps a uma variável para podermos usar o teamSlug no Axios
 const props = defineProps<{
     agendaSemanal: Record<string, AgendaItem[]>;
     teamSlug: string;
 }>();
 
-// --- Lógica do Modal ---
+// --- Lógica do Modal de Detalhes ---
 const isModalOpen = ref(false);
 const isLoading = ref(false);
 const locacaoSelecionada = ref<any>(null);
-// Pode remover a linha: import axios from 'axios';
 
 const abrirModalLocacao = async (id: number) => {
     isModalOpen.value = true;
@@ -38,23 +35,69 @@ const abrirModalLocacao = async (id: number) => {
     locacaoSelecionada.value = null;
 
     try {
-        // 1. Usamos o fetch nativo passando a URL
         const response = await fetch(`/${props.teamSlug}/locacoes/${id}`, {
             headers: {
-                Accept: 'application/json', // 👈 Isso avisa o Laravel para devolver JSON (nosso truque!)
-                'X-Requested-With': 'XMLHttpRequest', // 👈 Garante que o Laravel saiba que é uma requisição assíncrona
+                Accept: 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
             },
         });
-
-        // 2. Com fetch, precisamos converter a resposta para JSON manualmente
         const data = await response.json();
-
-        // 3. Pegamos os dados normalmente
         locacaoSelecionada.value = data.rental;
     } catch (error) {
         console.error('Erro ao buscar locação', error);
     } finally {
         isLoading.value = false;
+    }
+};
+
+// --- LÓGICA DO SWIPE (Agora com Chave Única) ---
+// Em vez de guardar o ID, guardamos uma string única para identificar exatamente o card
+const swipedItemKey = ref<string | null>(null);
+let startX = 0;
+
+const onDragStart = (e: TouchEvent | MouseEvent) => {
+    startX = 'changedTouches' in e ? e.changedTouches[0].screenX : e.screenX;
+};
+
+const onDragEnd = (e: TouchEvent | MouseEvent, uniqueKey: string) => {
+    const endX =
+        'changedTouches' in e ? e.changedTouches[0].screenX : e.screenX;
+    const distance = startX - endX;
+
+    if (distance > 50) {
+        swipedItemKey.value = uniqueKey;
+    } else if (distance < -50 && swipedItemKey.value === uniqueKey) {
+        swipedItemKey.value = null;
+    }
+};
+
+// --- LÓGICA DE CONFIRMAÇÃO ---
+const isConfirmModalOpen = ref(false);
+const itemToConfirm = ref<AgendaItem | null>(null);
+
+const abrirConfirmacao = (item: AgendaItem) => {
+    itemToConfirm.value = item;
+    isConfirmModalOpen.value = true;
+};
+
+const confirmarAcaoFinal = async () => {
+    if (!itemToConfirm.value) return;
+
+    try {
+        // Exemplo de requisição dinâmica baseada na operação:
+        // const endpoint = itemToConfirm.value.operacao === 'entrega' ? 'entregar' : 'retirar';
+        // await fetch(`/${props.teamSlug}/locacoes/${itemToConfirm.value.id}/${endpoint}`, { method: 'POST' });
+
+        console.log(
+            `Sucesso: ${itemToConfirm.value.operacao} concluída para o ID`,
+            itemToConfirm.value.id,
+        );
+
+        isConfirmModalOpen.value = false;
+        swipedItemKey.value = null;
+        itemToConfirm.value = null;
+    } catch (error) {
+        console.error('Erro ao confirmar a ação', error);
     }
 };
 </script>
@@ -63,7 +106,6 @@ const abrirModalLocacao = async (id: number) => {
     <div
         class="flex max-h-[360px] min-h-[50vh] flex-1 flex-col rounded-sm border border-solid p-3"
     >
-        <!-- Topo fixo da Agenda -->
         <div
             class="flex items-center gap-2 rounded border border-b border-solid p-2"
         >
@@ -71,7 +113,6 @@ const abrirModalLocacao = async (id: number) => {
             <h3 class="font-bold tracking-wider uppercase">Agenda da Semana</h3>
         </div>
 
-        <!-- Área de Scroll da lista (Estilo Google Agenda) -->
         <div
             class="custom-scrollbar flex-1 space-y-3 overflow-y-auto py-2 font-mono text-xs"
         >
@@ -87,68 +128,108 @@ const abrirModalLocacao = async (id: number) => {
                 :key="dia"
                 class="space-y-1"
             >
-                <!-- Label do Dia (Hoje, Amanhã, Segunda-feira...) -->
                 <div
                     class="text-md sticky top-0 z-10 rounded bg-primary px-2 py-1 font-bold tracking-wide text-primary-foreground uppercase"
                 >
                     {{ dia }}
                 </div>
 
-                <!-- Compromissos do Dia -->
                 <div class="space-y-1 pl-1">
-                    <!-- 👇 Troquei o <Link> por uma div com @click e cursor-pointer -->
                     <div
                         v-for="item in compromissos"
-                        :key="`${item.id}-${item.operacao}`"
-                        @click="abrirModalLocacao(item.id)"
-                        class="flex cursor-pointer items-center justify-between gap-2 rounded-sm border border-solid p-2 transition-colors hover:bg-primary-foreground"
+                        :key="`${dia}-${item.id}-${item.operacao}`"
+                        class="relative overflow-hidden rounded-sm border border-solid"
                         :class="[
                             item.operacao === 'entrega'
                                 ? 'border-chart-3'
                                 : 'border-chart-5',
                         ]"
                     >
-                        <!-- Esquerda (Hora, Ícone e Cliente) -->
-                        <div class="flex min-w-0 flex-1 items-center gap-2">
-                            <span class="shrink-0 font-bold">{{
-                                item.horario
-                            }}</span>
-                            <Truck
-                                class="h-5 w-5 shrink-0"
-                                :class="
-                                    item.operacao === 'entrega'
-                                        ? 'text-chart-3'
-                                        : '0 rotate-y-180 text-chart-5'
-                                "
-                            />
-                            <span
-                                class="truncate font-bold"
-                                :title="item.cliente"
+                        <!-- Camada de Fundo Dinâmica (Verde p/ Entrega, Azul p/ Retirada) -->
+                        <div
+                            class="absolute inset-y-0 right-0 flex w-24 items-center justify-center transition-colors"
+                            :class="
+                                item.operacao === 'entrega'
+                                    ? 'bg-green-600 hover:bg-green-700'
+                                    : 'bg-blue-600 hover:bg-blue-700'
+                            "
+                        >
+                            <button
+                                @click.stop="abrirConfirmacao(item)"
+                                class="h-full w-full text-[11px] font-bold text-white uppercase"
                             >
-                                {{ item.cliente }}
-                            </span>
+                                {{
+                                    item.operacao === 'entrega'
+                                        ? 'Entregue'
+                                        : 'Retirado'
+                                }}
+                            </button>
                         </div>
 
-                        <!-- Direita (Tags de Carga e Valor lado a lado) -->
+                        <!-- Card Principal: Usa a chave unindo Dia+ID+Operação -->
                         <div
-                            class="flex shrink-0 flex-col items-center gap-1 font-mono text-[12px]"
+                            @click="abrirModalLocacao(item.id)"
+                            @touchstart="onDragStart"
+                            @touchend="
+                                onDragEnd(
+                                    $event,
+                                    `${dia}-${item.id}-${item.operacao}`,
+                                )
+                            "
+                            @mousedown="onDragStart"
+                            @mouseup="
+                                onDragEnd(
+                                    $event,
+                                    `${dia}-${item.id}-${item.operacao}`,
+                                )
+                            "
+                            class="relative flex cursor-pointer items-center justify-between gap-2 bg-background p-2 transition-transform duration-300 hover:bg-muted/50"
+                            :class="
+                                swipedItemKey ===
+                                `${dia}-${item.id}-${item.operacao}`
+                                    ? '-translate-x-24'
+                                    : 'translate-x-0'
+                            "
                         >
-                            <!-- Tag do Valor -->
-                            <div
-                                class="rounded-sm border bg-primary px-1 py-0.5 text-primary-foreground"
-                            >
-                                <span>{{
-                                    new Intl.NumberFormat('pt-BR', {
-                                        style: 'currency',
-                                        currency: 'BRL',
-                                    }).format(parseInt(item.valor ?? 0))
+                            <!-- Dados do Card -->
+                            <div class="flex min-w-0 flex-1 items-center gap-2">
+                                <span class="shrink-0 font-bold">{{
+                                    item.horario
                                 }}</span>
+                                <Truck
+                                    class="h-5 w-5 shrink-0"
+                                    :class="
+                                        item.operacao === 'entrega'
+                                            ? 'text-chart-3'
+                                            : '0 rotate-y-180 text-chart-5'
+                                    "
+                                />
+                                <span
+                                    class="truncate font-bold"
+                                    :title="item.cliente"
+                                >
+                                    {{ item.cliente }}
+                                </span>
                             </div>
-                            <!-- Tag da Carga -->
+
                             <div
-                                class="rounded-sm border px-1 py-0.5 font-bold"
+                                class="flex shrink-0 flex-col items-center gap-1 font-mono text-[12px]"
                             >
-                                {{ item.quantidade }}
+                                <div
+                                    class="rounded-sm border bg-primary px-1 py-0.5 text-primary-foreground"
+                                >
+                                    <span>{{
+                                        new Intl.NumberFormat('pt-BR', {
+                                            style: 'currency',
+                                            currency: 'BRL',
+                                        }).format(parseInt(item.valor ?? '0'))
+                                    }}</span>
+                                </div>
+                                <div
+                                    class="rounded-sm border px-1 py-0.5 font-bold"
+                                >
+                                    {{ item.quantidade }}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -157,7 +238,7 @@ const abrirModalLocacao = async (id: number) => {
         </div>
     </div>
 
-    <!-- 👇 O Modal (Dialog) que será aberto -->
+    <!-- Modal Detalhes -->
     <Dialog v-model:open="isModalOpen">
         <DialogContent class="max-h-[90vh] border sm:max-w-[600px]">
             <DialogHeader>
@@ -165,22 +246,66 @@ const abrirModalLocacao = async (id: number) => {
                     >Detalhes do Agendamento</DialogTitle
                 >
             </DialogHeader>
-
-            <!-- Loading enquanto o axios busca no banco -->
             <div v-if="isLoading" class="py-12 text-center font-mono">
                 Carregando informações...
             </div>
-
-            <!-- O componente puro preenchido com os dados -->
             <div v-else-if="locacaoSelecionada">
                 <RentalDetails :rental="locacaoSelecionada" />
+            </div>
+        </DialogContent>
+    </Dialog>
+
+    <!-- Modal de Confirmação Dinâmico -->
+    <Dialog v-model:open="isConfirmModalOpen">
+        <DialogContent class="sm:max-w-[400px]">
+            <DialogHeader>
+                <DialogTitle class="text-xl font-bold tracking-wider">
+                    Confirmar
+                    {{
+                        itemToConfirm?.operacao === 'entrega'
+                            ? 'Entrega'
+                            : 'Retirada'
+                    }}
+                </DialogTitle>
+            </DialogHeader>
+
+            <div class="py-4">
+                <p>
+                    Tem certeza que deseja marcar a
+                    <strong>{{
+                        itemToConfirm?.operacao === 'entrega'
+                            ? 'entrega'
+                            : 'retirada'
+                    }}</strong>
+                    de <strong>{{ itemToConfirm?.cliente }}</strong> como
+                    concluída?
+                </p>
+            </div>
+
+            <div class="flex justify-end gap-3 pt-4">
+                <button
+                    @click="isConfirmModalOpen = false"
+                    class="rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground"
+                >
+                    Cancelar
+                </button>
+                <button
+                    @click="confirmarAcaoFinal"
+                    class="rounded-md px-4 py-2 text-sm font-medium text-white transition-colors"
+                    :class="
+                        itemToConfirm?.operacao === 'entrega'
+                            ? 'bg-green-600 hover:bg-green-700'
+                            : 'bg-blue-600 hover:bg-blue-700'
+                    "
+                >
+                    Sim, Confirmar
+                </button>
             </div>
         </DialogContent>
     </Dialog>
 </template>
 
 <style scoped>
-/* Scrollbar customizada e fina para não quebrar o layout */
 .custom-scrollbar::-webkit-scrollbar {
     width: 4px;
 }
