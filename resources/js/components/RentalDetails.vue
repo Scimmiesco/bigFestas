@@ -99,7 +99,7 @@ const rentalItemGroups = computed(() => {
                     {{ rental.status }}
                 </div>
                 <div
-                    class="rounded border bg-amber-100 px-2 py-1 text-center text-xs font-bold text-background uppercase"
+                    class="rounded border bg-foreground px-2 py-1 text-center text-xs font-bold text-background uppercase"
                 >
                     R$ {{ rental.valor }}
                 </div>

@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { Calendar, Truck, Ellipsis } from 'lucide-vue-next';
+import { Link } from '@inertiajs/vue3';
+import { Calendar, Truck, CalendarPlus, CheckCheck } from 'lucide-vue-next';
 import { ref } from 'vue';
 import RentalDetails from '@/components/RentalDetails.vue';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -108,6 +110,11 @@ const confirmarAcaoFinal = async () => {
     >
         <Calendar class="h-6 w-6" />
         <h3 class="font-bold tracking-wider uppercase">Agenda da Semana</h3>
+        <Button as-child class="ml-auto">
+            <Link :href="`/${props.teamSlug}/locacoes/criar`">
+                <CalendarPlus />
+            </Link>
+        </Button>
     </div>
     <div
         class="flex max-h-[360px] min-h-[50vh] flex-1 flex-col rounded-sm border border-solid p-2"
@@ -223,13 +230,16 @@ const confirmarAcaoFinal = async () => {
                                     {{ item.quantidade }}
                                 </div>
                             </div>
-                            <div class="block">
+                            <div
+                                @click.stop="abrirConfirmacao(item)"
+                                class="flex-no-wrap align-center hidden w-min grow-0 gap-1 text-center md:flex"
+                            >
                                 <span
-                                    class="text-wrap wrap-break-word overflow-w "
+                                    class="overflow-w align-center relative text-center text-wrap wrap-break-word"
                                     :class="
                                         item.operacao === 'entrega'
                                             ? 'text-chart-3'
-                                            : ''
+                                            : 'text-chart-5'
                                     "
                                 >
                                     {{
@@ -237,6 +247,9 @@ const confirmarAcaoFinal = async () => {
                                             ? 'Confirmar entrega'
                                             : 'Confirmar retirada'
                                     }}
+                                    <CheckCheck
+                                        class="absolute top-1/2 left-1/2 h-8 w-8 -translate-x-1/2 -translate-y-1/2"
+                                    />
                                 </span>
                             </div>
                         </div>

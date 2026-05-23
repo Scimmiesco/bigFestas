@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { Boxes } from 'lucide-vue-next';
+import { Link } from '@inertiajs/vue3';
+import { Boxes, PackagePlus } from 'lucide-vue-next';
 import ItemStatus from '@/components/ItemStatus.vue';
+import { Button } from '@/components/ui/button';
 
 interface EstoqueDetalhe {
     tipo: string;
@@ -18,8 +20,9 @@ interface StockData {
     agenda_semanal: any; // 👈 Atualizado aqui
 }
 
-defineProps<{
+const props = defineProps<{
     data: StockData;
+    teamSlug: string;
 }>();
 </script>
 
@@ -32,6 +35,10 @@ defineProps<{
             <h3 class="font-bold tracking-wider uppercase">
                 Resumo do estoque
             </h3>
+            <Button class="ml-auto" as-child
+                ><Link :href="`/${props.teamSlug}/estoque/criar`"
+                    ><PackagePlus /></Link
+            ></Button>
         </div>
         <div class="flex flex-col gap-4 md:flex-row">
             <!-- Bloco: Prontos para Alugar -->
