@@ -104,17 +104,16 @@ const confirmarAcaoFinal = async () => {
 
 <template>
     <div
-        class="flex max-h-[360px] min-h-[50vh] flex-1 flex-col rounded-sm border border-solid p-3"
+        class="flex items-center gap-2 rounded border border-b border-solid p-2"
+    >
+        <Calendar class="h-6 w-6" />
+        <h3 class="font-bold tracking-wider uppercase">Agenda da Semana</h3>
+    </div>
+    <div
+        class="flex max-h-[360px] min-h-[50vh] flex-1 flex-col rounded-sm border border-solid p-2"
     >
         <div
-            class="flex items-center gap-2 rounded border border-b border-solid p-2"
-        >
-            <Calendar class="h-6 w-6" />
-            <h3 class="font-bold tracking-wider uppercase">Agenda da Semana</h3>
-        </div>
-
-        <div
-            class="custom-scrollbar flex-1 space-y-3 overflow-y-auto py-2 font-mono text-xs"
+            class="custom-scrollbar flex-1 space-y-3 overflow-y-auto font-mono text-xs"
         >
             <div
                 v-if="Object.keys(agendaSemanal).length === 0"
@@ -224,19 +223,22 @@ const confirmarAcaoFinal = async () => {
                                     {{ item.quantidade }}
                                 </div>
                             </div>
-                            <span
-                                :class="
-                                    item.operacao === 'entrega'
-                                        ? 'text-chart-2'
-                                        : ''
-                                "
-                            >
-                                {{
-                                    item.operacao === 'entrega'
-                                        ? 'Entregue'
-                                        : 'Retirado'
-                                }}
-                            </span>
+                            <div class="block">
+                                <span
+                                    class="text-wrap wrap-break-word overflow-w "
+                                    :class="
+                                        item.operacao === 'entrega'
+                                            ? 'text-chart-3'
+                                            : ''
+                                    "
+                                >
+                                    {{
+                                        item.operacao === 'entrega'
+                                            ? 'Confirmar entrega'
+                                            : 'Confirmar retirada'
+                                    }}
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </div>

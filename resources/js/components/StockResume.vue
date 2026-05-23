@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Boxes } from 'lucide-vue-next';
 import ItemStatus from '@/components/ItemStatus.vue';
 
 interface EstoqueDetalhe {
@@ -23,12 +24,18 @@ defineProps<{
 </script>
 
 <template>
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+        <div
+            class="flex items-center gap-2 rounded border border-b border-solid p-2"
+        >
+            <Boxes class="h-6 w-6" />
+            <h3 class="font-bold tracking-wider uppercase">
+                Resumo do estoque
+            </h3>
+        </div>
         <div class="flex flex-col gap-4 md:flex-row">
             <!-- Bloco: Prontos para Alugar -->
-            <div
-                class="flex-1 rounded-sm border border-2 border-solid px-4 py-3"
-            >
+            <div class="flex-1 rounded-sm border px-4 py-3">
                 <div class="flex h-full flex-col justify-between">
                     <p class="text-xs font-bold tracking-wider uppercase">
                         Prontos para Alugar

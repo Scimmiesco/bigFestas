@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { DollarSign, Clock, AlertCircle } from 'lucide-vue-next';
+import { DollarSign, Clock, AlertCircle, PiggyBank } from 'lucide-vue-next';
 
 defineProps<{
     data: any;
@@ -19,6 +19,14 @@ const formatarMoeda = (valor: number) => {
 </script>
 
 <template>
+    <div
+        class="flex items-center gap-2 rounded border border-b border-solid p-2"
+    >
+        <PiggyBank class="h-6 w-6" />
+        <h3 class="font-bold tracking-wider uppercase">
+            Movimentações financeiras
+        </h3>
+    </div>
     <div class="grid min-h-[25vh] grid-cols-2 gap-2 md:grid-cols-3">
         <!-- Card 1: Recebido -->
         <div

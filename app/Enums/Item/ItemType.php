@@ -6,6 +6,7 @@ enum ItemType: string
     case Cadeira = 'cadeira';
     case Mesa = 'mesa';
     case Cooler = 'cooler';
+    case Tenda = 'tenda';
 
     public function label(): string
     {
@@ -13,6 +14,7 @@ enum ItemType: string
             self::Cooler => 'Coolers',
             self::Mesa => 'Mesas',
             self::Cadeira => 'Cadeiras',
+            self::Tenda => 'Tendas',
         };
     }
 }

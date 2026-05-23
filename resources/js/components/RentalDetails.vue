@@ -99,7 +99,7 @@ const rentalItemGroups = computed(() => {
                     {{ rental.status }}
                 </div>
                 <div
-                    class="rounded border bg-amber-100 px-2 py-1 text-center text-xs font-bold uppercase"
+                    class="rounded border bg-amber-100 px-2 py-1 text-center text-xs font-bold text-background uppercase"
                 >
                     R$ {{ rental.valor }}
                 </div>
@@ -206,7 +206,7 @@ const rentalItemGroups = computed(() => {
                                 class="grid grid-cols-3 grid-rows-3 place-items-center gap-1"
                             >
                                 <Armchair
-                                    class="col-start-2 row-start-1 h-4 w-4 text-chart-1"
+                                    class="col-start-2 row-start-1 h-4 w-4 text-chart-3"
                                 />
 
                                 <Armchair

@@ -77,24 +77,16 @@ const formatStatus = (status: string) => {
             </Button>
         </div>
 
-        <div
-            class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
-        >
+        <div class="overflow-hidden rounded-sm border">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
-                    <thead
-                        class="border-b bg-gray-50 text-gray-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-300"
-                    >
+                    <thead class="border-b bg-primary text-background">
                         <tr>
-                            <th class="px-6 py-3 font-medium">Cliente</th>
-                            <th
-                                class="hidden px-6 py-3 font-medium md:table-cell"
-                            >
-                                Endereço
-                            </th>
-                            <th class="px-6 py-3 font-medium">Data Entrega</th>
-                            <th class="px-6 py-3 font-medium">Status</th>
-                            <th class="px-6 py-3 text-right font-medium">
+                            <th class="px-3 py-2 font-bold">Cliente</th>
+                            <th class="px-3 py-1 font-bold">Endereço</th>
+                            <th class="px-3 py-1 font-bold">Data Entrega</th>
+                            <th class="px-3 py-1 font-bold">Status</th>
+                            <th class="px-3 py-1 text-center font-bold">
                                 Ações
                             </th>
                         </tr>

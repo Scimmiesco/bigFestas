@@ -47,19 +47,19 @@ class HandleInertiaRequests extends Middleware
             'enums' =>
             [
             'item_status' => collect(ItemStatus::cases())->map(fn ($s) => [
-                    'name' => $s->name,
+                    'name' => $s->label(),
                     'value' => $s->value
             ]),
             'item_types' => collect(ItemType::cases())->map(fn ($s) => [
-                    'name' => $s->name,
+                    'name' => $s->label(),
                     'value' => $s->value
             ]),
             'payment_types' => collect(PaymentMethods::cases())->map(fn ($s) => [
-                    'name' => $s->name,
+                    'name' => $s->label(),
                     'value' => $s->value
             ]),
             'payment_status' => collect(PaymentStatus::cases())->map(fn ($s) => [
-                    'name' => $s->name,
+                    'name' => $s->label(),
                     'value' => $s->value
             ]),
             ],
