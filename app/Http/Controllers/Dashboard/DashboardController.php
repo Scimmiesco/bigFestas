@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Team;
 use App\Services\Dashboard\StockResumeService;
 use App\Services\Payment\PaymentResumeService;
+use App\Services\Rentals\RentalService;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,7 +14,8 @@ class DashboardController extends Controller
 {
     public function __construct(
     private StockResumeService $stockResumeService,
-    private PaymentResumeService $paymentResumeService)
+    private PaymentResumeService $paymentResumeService,
+    private RentalService $rentalService)
     {
     }
 
@@ -21,11 +23,13 @@ class DashboardController extends Controller
     {
         $paymentData = $this->paymentResumeService->getSummary($current_team);
         $stockData = $this->stockResumeService->getSummary($current_team);
+        $plannerData = $this->rentalService->getSummary($current_team);
 
         return Inertia::render('dashboard/Dashboard',
         [
         'stockResumeData' => $stockData,
-        'paymentData' => $paymentData
+        'paymentData' => $paymentData,
+        'plannerData' => $plannerData
         ]);
     }
 }

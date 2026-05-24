@@ -230,7 +230,7 @@ const rentalItemGroups = computed(() => {
                 </div>
 
                 <div
-                    class="flex flex-wrap justify-center gap-3 font-mono text-sm"
+                    class="flex flex-wrap justify-center gap-2 font-mono text-sm"
                 >
                     <div
                         v-if="rentalItemGroups.extraTables > 0"
@@ -260,7 +260,7 @@ const rentalItemGroups = computed(() => {
                     >
                         <div class="flex items-center justify-between gap-4">
                             <span class="font-bold">Cadeiras</span>
-                            <span class="/80 font-bold"
+                            <span class="font-bold"
                                 >{{
                                     rentalItemGroups.extraChairs
                                 }}

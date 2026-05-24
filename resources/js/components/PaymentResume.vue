@@ -1,8 +1,17 @@
 <script setup lang="ts">
-import { DollarSign, Clock, AlertCircle, PiggyBank } from 'lucide-vue-next';
+import { Link } from '@inertiajs/vue3';
+import {
+    DollarSign,
+    Clock,
+    AlertCircle,
+    PiggyBank,
+    HandCoins,
+} from 'lucide-vue-next';
+import { Button } from '@/components/ui/button';
 
 defineProps<{
     data: any;
+    teamSlug: string;
 }>();
 
 // Função nativa do Javascript para formatar como moeda brasileira (R$)
@@ -26,6 +35,9 @@ const formatarMoeda = (valor: number) => {
         <h3 class="font-bold tracking-wider uppercase">
             Movimentações financeiras
         </h3>
+        <Button as-child class="ml-auto">
+            <Link :href="`/${teamSlug}/pagamentos/criar`"><HandCoins /></Link>
+        </Button>
     </div>
     <div class="grid min-h-[25vh] grid-cols-2 gap-2 md:grid-cols-3">
         <!-- Card 1: Recebido -->

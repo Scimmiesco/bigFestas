@@ -261,7 +261,9 @@ const confirmarAcaoFinal = async () => {
 
     <!-- Modal Detalhes -->
     <Dialog v-model:open="isModalOpen">
-        <DialogContent class="max-h-[90vh] border sm:max-w-[600px]">
+        <DialogContent
+            class="max-h-[90vh] overflow-auto border sm:max-w-[600px]"
+        >
             <DialogHeader>
                 <DialogTitle class="tracking-wider"
                     >Detalhes do Agendamento</DialogTitle
