@@ -52,6 +52,7 @@ const isBulkEditing = ref(false);
 
 const toggleSelectAll = (event: Event) => {
     const isChecked = (event.target as HTMLInputElement).checked;
+
     if (isChecked) {
         selectedItems.value = props.estoque.data.map((item) => item.id);
     } else {
@@ -91,10 +92,8 @@ const deletar = (id: number) => {
 <template>
     <Head title="Estoque" />
 
-    <div class="flex flex-col space-y-8 p-4">
-        <div
-            class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"
-        >
+    <div class="page-container">
+        <div class="page-header">
             <Heading
                 variant="small"
                 title="Gerenciar Estoque"
@@ -102,10 +101,7 @@ const deletar = (id: number) => {
             />
 
             <Button as-child>
-                <Link
-                    :href="`/${teamSlug ?? ''}/itens/criar`"
-                    class="flex items-center gap-2"
-                >
+                <Link :href="`/${teamSlug ?? ''}/itens/criar`">
                     <Plus class="h-4 w-4" />
                     Adicionar Novo Item
                 </Link>
@@ -114,11 +110,9 @@ const deletar = (id: number) => {
 
         <div
             v-if="selectedItems.length > 0 && !isBulkEditing"
-            class="flex items-center justify-between rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 shadow-sm dark:border-blue-900/50 dark:bg-blue-900/20"
+            class="bulk-action-bar"
         >
-            <div
-                class="flex items-center gap-2 text-sm font-medium text-blue-700 dark:text-blue-300"
-            >
+            <div class="bulk-info">
                 <CheckSquare class="h-5 w-5" />
                 <span>{{ selectedItems.length }} item(ns) selecionado(s)</span>
             </div>
@@ -128,7 +122,7 @@ const deletar = (id: number) => {
                     @click="isBulkEditing = true"
                     variant="outline"
                     size="sm"
-                    class="flex h-9 items-center gap-2"
+                    class="btn-bulk-edit"
                 >
                     <Pencil class="h-4 w-4" />
                     Editar Itens Selecionados
@@ -136,10 +130,7 @@ const deletar = (id: number) => {
             </div>
         </div>
 
-        <div
-            v-if="isBulkEditing"
-            class="animate-in fade-in slide-in-from-top-4"
-        >
+        <div v-if="isBulkEditing" class="bulk-form-container">
             <Heading
                 variant="small"
                 title="Edição Múltipla"
@@ -155,38 +146,28 @@ const deletar = (id: number) => {
             />
         </div>
 
-        <div
-            v-show="!isBulkEditing"
-            class="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800"
-        >
+        <div v-show="!isBulkEditing" class="table-wrapper">
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
-                    <thead
-                        class="border-b bg-gray-50 text-gray-600 dark:border-gray-700 dark:bg-gray-900/50 dark:text-gray-300"
-                    >
+                <table class="data-table">
+                    <thead class="table-head">
                         <tr>
-                            <th class="w-12 px-6 py-3">
+                            <th class="w-12 p-4">
                                 <input
                                     type="checkbox"
                                     :checked="isAllSelected"
                                     @change="toggleSelectAll"
-                                    class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                                    class="checkbox-base"
                                 />
                             </th>
-                            <th class="px-6 py-3 font-medium">Nome do Item</th>
-                            <th class="px-6 py-3 font-medium">Tipo</th>
-                            <th class="px-6 py-3 font-medium">Status</th>
-                            <th class="px-6 py-3 text-right font-medium">
-                                Ações
-                            </th>
+                            <th class="th-cell text-nowrap">Nome do Item</th>
+                            <th class="th-cell">Tipo</th>
+                            <th class="th-cell">Status</th>
+                            <th class="th-cell">Ações</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y dark:divide-gray-700">
+                    <tbody class="table-body">
                         <tr v-if="props.estoque.data.length === 0">
-                            <td
-                                colspan="5"
-                                class="px-6 py-8 text-center text-gray-500"
-                            >
+                            <td colspan="5" class="empty-state">
                                 Nenhum item cadastrado no estoque ainda.
                             </td>
                         </tr>
@@ -194,47 +175,38 @@ const deletar = (id: number) => {
                         <tr
                             v-for="item in props.estoque.data"
                             :key="item.id"
-                            class="group transition-colors hover:bg-gray-50 dark:hover:bg-gray-800/50"
+                            class="group table-row"
                             :class="{
-                                'bg-blue-50/50 dark:bg-blue-900/10':
-                                    selectedItems.includes(item.id),
+                                'saturate-150': selectedItems.includes(item.id),
                             }"
                         >
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-2 text-center">
                                 <input
                                     type="checkbox"
                                     :value="item.id"
                                     v-model="selectedItems"
-                                    class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800"
+                                    class="checkbox-base"
                                 />
                             </td>
-                            <td
-                                class="px-6 py-4 font-medium text-gray-900 dark:text-white"
-                            >
-                                {{ item.nome }}
+                            <td class="td-cell font-medium">
+                                <div class="item-name">
+                                    {{ item.nome }}
+                                </div>
                             </td>
-                            <td class="px-6 py-4 capitalize">
+
+                            <td class="td-cell text-center font-mono uppercase">
                                 {{ item.tipo }}
                             </td>
-                            <td class="px-6 py-4 capitalize">
-                                <span
-                                    class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold"
-                                    :class="
-                                        item.status === 'ativo'
-                                            ? 'bg-green-100 text-green-800'
-                                            : 'bg-gray-100 text-gray-800'
-                                    "
-                                >
-                                    {{ item.status }}
-                                </span>
+                            <td
+                                class="td-cell text-center font-mono text-xs font-semibold uppercase"
+                            >
+                                {{ item.status }}
                             </td>
-                            <td class="px-6 py-4 text-right">
-                                <div
-                                    class="flex justify-end gap-3 opacity-100 transition-opacity group-hover:opacity-100 sm:opacity-0"
-                                >
+                            <td class="px-6 py-4 text-center">
+                                <div class="action-buttons">
                                     <Link
                                         :href="`/${teamSlug}/itens/${item.id}/editar`"
-                                        class="flex items-center gap-1 text-sm font-medium text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
+                                        class="btn-edit"
                                     >
                                         <Pencil class="h-4 w-4" />
                                         <span class="hidden sm:inline"
@@ -245,7 +217,7 @@ const deletar = (id: number) => {
                                     <button
                                         @click="deletar(item.id)"
                                         type="button"
-                                        class="flex items-center gap-1 text-sm font-medium text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
+                                        class="btn-delete"
                                     >
                                         <Trash2 class="h-4 w-4" />
                                         <span class="hidden sm:inline"
@@ -260,13 +232,13 @@ const deletar = (id: number) => {
             </div>
 
             <div
-                class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:border-gray-700 dark:bg-gray-800"
+                class="pagination-wrapper"
                 v-if="props.estoque.links.length > 3"
             >
-                <div class="flex flex-1 justify-between sm:hidden">
+                <div class="pagination-mobile">
                     <Link
                         :href="props.estoque.links[0].url ?? '#'"
-                        class="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        class="btn-pagination"
                     >
                         Anterior
                     </Link>
@@ -275,16 +247,15 @@ const deletar = (id: number) => {
                             props.estoque.links[props.estoque.links.length - 1]
                                 .url ?? '#'
                         "
-                        class="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                        class="btn-pagination ml-3"
                     >
                         Próxima
                     </Link>
                 </div>
-                <div
-                    class="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between"
-                >
+
+                <div class="pagination-desktop">
                     <div>
-                        <p class="text-sm text-gray-700 dark:text-gray-400">
+                        <p class="pagination-info">
                             Página
                             <span class="font-medium">{{
                                 props.estoque.current_page
@@ -296,10 +267,7 @@ const deletar = (id: number) => {
                         </p>
                     </div>
                     <div>
-                        <nav
-                            class="isolate inline-flex -space-x-px rounded-md shadow-sm"
-                            aria-label="Pagination"
-                        >
+                        <nav class="pagination-nav" aria-label="Pagination">
                             <template
                                 v-for="(link, index) in props.estoque.links"
                                 :key="index"
@@ -307,19 +275,16 @@ const deletar = (id: number) => {
                                 <Link
                                     v-if="link.url"
                                     :href="link.url"
-                                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-gray-300 ring-inset hover:bg-gray-50 dark:ring-gray-700 dark:hover:bg-gray-700"
+                                    class="pagination-link"
                                     :class="
                                         link.active
-                                            ? 'z-10 bg-blue-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600'
-                                            : 'text-gray-900 dark:text-gray-200'
+                                            ? 'pagination-link-active'
+                                            : 'pagination-link-inactive'
                                     "
                                 >
                                     <span v-html="link.label"></span>
                                 </Link>
-                                <span
-                                    v-else
-                                    class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-400 ring-1 ring-gray-300 ring-inset dark:ring-gray-700"
-                                >
+                                <span v-else class="pagination-link-disabled">
                                     <span v-html="link.label"></span>
                                 </span>
                             </template>

@@ -1,0 +1,9 @@
+@layer components {
+    .page-container {
+        @apply flex flex-col space-y-2 p-1;
+    }
+
+    .page-header {
+        @apply flex flex-row justify-between gap-4 sm:flex-row sm:items-center;
+    }
+}
