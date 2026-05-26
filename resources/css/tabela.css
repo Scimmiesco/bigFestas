@@ -1,8 +1,17 @@
 /* tabela.css */
 @layer components {
     /* --- ESTRUTURA DA TABELA --- */
+
+    .bulk-action-bar {
+        @apply flex justify-between;
+    }
+
+    .bulk-info {
+        @apply flex items-center gap-2 text-center;
+    }
+
     .table-wrapper {
-        @apply overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700;
+        @apply overflow-hidden rounded-xl border border-primary;
     }
 
     .data-table {
@@ -14,11 +23,11 @@
     }
 
     .th-cell {
-        @apply text-primary-foreground p-4 text-center font-medium;
+        @apply p-4 text-center font-medium text-primary-foreground;
     }
 
     .table-body {
-        @apply divide-y divide-gray-200 dark:divide-gray-700;
+        @apply divide-y divide-muted;
     }
 
     .table-row {
@@ -34,11 +43,11 @@
     }
 
     .item-name {
-        @apply mask-ellipse w-36 overflow-hidden text-ellipsis text-nowrap md:w-full;
+        @apply w-36 overflow-hidden mask-ellipse text-nowrap text-ellipsis md:w-full;
     }
 
     .checkbox-base {
-        @apply h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:ring-offset-gray-800;
+        @apply h-4 w-4 rounded border-foreground text-primary focus:ring-primary;
     }
 
     /* --- BOTÕES DE AÇÃO --- */
@@ -47,16 +56,16 @@
     }
 
     .btn-edit {
-        @apply text-chart-3 flex items-center gap-1 text-sm font-medium hover:underline;
+        @apply flex items-center gap-1 text-sm font-medium text-chart-3 hover:underline;
     }
 
     .btn-delete {
-        @apply text-chart-1 flex cursor-pointer items-center gap-1 text-sm font-medium hover:underline;
+        @apply flex cursor-pointer items-center gap-1 text-sm font-medium text-chart-1 hover:underline;
     }
 
     /* --- PAGINAÇÃO --- */
     .pagination-wrapper {
-        @apply flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6 dark:border-gray-700 dark:bg-gray-800;
+        @apply flex items-center justify-between border-t px-3 py-2 sm:px-6;
     }
 
     .pagination-mobile {
@@ -68,30 +77,29 @@
     }
 
     .btn-pagination {
-        @apply relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
+        @apply relative inline-flex items-center rounded-sm border bg-primary px-3 py-2 text-sm font-medium text-primary-foreground;
     }
 
     .pagination-info {
-        @apply text-sm text-gray-700 dark:text-gray-400;
+        @apply text-sm text-primary;
     }
 
     .pagination-nav {
-        @apply isolate inline-flex -space-x-px rounded-md shadow-sm;
+        @apply isolate inline-flex -space-x-px rounded-sm border shadow-sm;
     }
 
     .pagination-link {
-        @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:ring-gray-700 dark:hover:bg-gray-700;
+        @apply relative inline-flex items-center bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground;
     }
 
     .pagination-link-active {
-        @apply z-10 bg-blue-600 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600;
+        @apply z-10 bg-primary-foreground text-foreground ring-1 ring-primary focus-visible:text-primary;
     }
 
     .pagination-link-inactive {
-        @apply text-gray-900 dark:text-gray-200;
     }
 
     .pagination-link-disabled {
-        @apply relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-400 ring-1 ring-inset ring-gray-300 dark:ring-gray-700;
+        @apply relative inline-flex items-center bg-primary-foreground px-4 py-2 text-sm font-semibold text-muted;
     }
 }

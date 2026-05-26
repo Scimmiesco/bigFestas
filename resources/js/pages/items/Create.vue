@@ -40,17 +40,17 @@ const combinedEnums = props.enums || {
 </script>
 
 <template>
-    <div>
+    <div class="page-container">
         <Head title="Adicionar Novo Item" />
 
-        <div class="mx-auto max-w-3xl py-6">
+        <div class="page-header">
             <Heading
-                variant="small"
+                variant="default"
                 title="Adicionar Item ao Estoque"
                 description="Preencha os detalhes abaixo para registrar um novo item."
             />
-
-            <Form :enums="combinedEnums" :teamSlug="teamSlug" />
         </div>
+
+        <Form :enums="combinedEnums" :teamSlug="teamSlug" />
     </div>
 </template>

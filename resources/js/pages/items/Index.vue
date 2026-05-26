@@ -95,7 +95,7 @@ const deletar = (id: number) => {
     <div class="page-container">
         <div class="page-header">
             <Heading
-                variant="small"
+                variant="default"
                 title="Gerenciar Estoque"
                 description="Visualize todos os itens disponíveis no seu time."
             />
@@ -202,7 +202,7 @@ const deletar = (id: number) => {
                             >
                                 {{ item.status }}
                             </td>
-                            <td class="px-6 py-4 text-center">
+                            <td class="td-cell">
                                 <div class="action-buttons">
                                     <Link
                                         :href="`/${teamSlug}/itens/${item.id}/editar`"

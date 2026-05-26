@@ -47,55 +47,49 @@ const submit = () => {
 </script>
 
 <template>
-    <div
-        class="mt-6 rounded-xl border border-sidebar-border bg-white p-6 shadow-sm dark:bg-sidebar"
-    >
-        <div
-            v-if="isBulkEdit"
-            class="mb-6 rounded-md bg-blue-50 p-4 text-sm text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
-        >
+    <div class="form-container">
+        <div v-if="isBulkEdit" class="m-2 rounded border p-2 text-sm">
             <strong>Modo de Edição em Lote:</strong> Preencha apenas os campos
             que deseja alterar para todos os {{ form.ids.length }} itens
             selecionados. Deixe em branco os campos que devem manter seus
             valores originais.
         </div>
 
-        <form @submit.prevent="submit" class="space-y-6">
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-12">
-                <div
-                    class="grid gap-2"
-                    :class="isEdit ? 'md:col-span-12' : 'md:col-span-9'"
-                >
-                    <Label for="nome">
-                        Nome do Item
-                        <span v-if="!isBulkEdit" class="text-red-500">*</span>
-                    </Label>
-                    <Input
-                        id="nome"
-                        v-model="form.nome"
-                        :placeholder="
-                            isBulkEdit
-                                ? 'Deixe em branco para manter o original'
-                                : 'Ex: Cadeira Plástica Branca'
-                        "
-                        :required="!isBulkEdit"
-                        :autofocus="!isBulkEdit"
-                    />
-                    <InputError :message="form.errors.nome" />
-                </div>
+        <form
+            @submit.prevent="submit"
+            class="flex flex-col gap-2 rounded bg-primary px-3 py-2 text-primary-foreground"
+        >
+            <div class="space-y-2">
+                <Label for="nome" class="">
+                    Nome do Item
+                    <span v-if="!isBulkEdit" class="text-chart-1">*</span>
+                </Label>
+                <Input
+                    id="nome"
+                    class="bg-primary-foreground text-foreground focus-visible:ring-2 focus-visible:ring-chart-5"
+                    v-model="form.nome"
+                    :placeholder="
+                        isBulkEdit
+                            ? 'Deixe em branco para manter o original'
+                            : 'Ex: Cadeira Plástica Branca'
+                    "
+                    :required="!isBulkEdit"
+                    :autofocus="!isBulkEdit"
+                />
+                <InputError :message="form.errors.nome" />
+            </div>
 
-                <div v-if="!isEdit" class="grid gap-2 md:col-span-3">
-                    <Label for="quantidade">Quantidade</Label>
-                    <Input
-                        id="quantidade"
-                        type="number"
-                        min="1"
-                        max="200"
-                        v-model="form.quantidade"
-                        required
-                    />
-                    <InputError :message="form.errors.quantidade" />
-                </div>
+            <div v-if="!isEdit" class="grid gap-2 md:col-span-3">
+                <Label for="quantidade">Quantidade</Label>
+                <Input
+                    id="quantidade"
+                    type="number"
+                    min="1"
+                    max="200"
+                    v-model="form.quantidade"
+                    required
+                />
+                <InputError :message="form.errors.quantidade" />
             </div>
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -182,14 +176,14 @@ const submit = () => {
                     type="button"
                     variant="outline"
                     @click="emit('cancel')"
-                    class="flex items-center gap-2"
+                    class="flex items-center gap-2 text-foreground"
                 >
                     <X class="h-4 w-4" /> Cancelar Lote
                 </Button>
                 <Button v-else type="button" variant="outline" as-child>
                     <Link
                         :href="itemsRoutes.index.url(teamSlug)"
-                        class="flex items-center gap-2"
+                        class="flex items-center gap-2 text-foreground"
                     >
                         <X class="h-4 w-4" /> Cancelar
                     </Link>

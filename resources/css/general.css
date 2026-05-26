@@ -4,6 +4,9 @@
     }
 
     .page-header {
-        @apply flex flex-row justify-between gap-4 sm:flex-row sm:items-center;
+        header {
+            @apply m-0;
+        }
+        @apply flex flex-row items-center justify-between gap-4;
     }
 }
