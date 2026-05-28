@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Clients\ClientController;
+use App\Http\Controllers\Adressess\AddressController;
 use App\Http\Controllers\Items\ItemController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Rentals\RentalController;
@@ -37,6 +39,11 @@ Route::prefix('{current_team}')
         Route::get('pagamentos', [PaymentController::class, 'index'])->name('payment.index');
         Route::get('pagamentos/criar', [PaymentController::class, 'create'])->name('payment.create');
         Route::post('pagamentos', [PaymentController::class, 'store'])->name('payment.store');
+
+        Route::get('clientes', [ClientController::class, 'index'])->name('client.index');
+
+        
+        Route::get('enderecos', [AddressController::class, 'index'])->name('client.index');
     });
 
 Route::middleware(['auth'])->group(function () {

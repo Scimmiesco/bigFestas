@@ -7,6 +7,8 @@ import {
     Boxes,
     Truck,
     Wallet,
+    Users,
+    MapPinHouse,
 } from 'lucide-vue-next';
 import { computed, ref, onMounted } from 'vue'; // 👈 Adicionados ref e onMounted aqui
 import AppLogo from '@/components/AppLogo.vue';
@@ -23,10 +25,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import client from '@/routes/client/index';
 import dashboard from '@/routes/dashboard/index';
 import item from '@/routes/items/index';
-import rentals from '@/routes/rentals/index';
 import payment from '@/routes/payment/index';
+import rentals from '@/routes/rentals/index';
+import adressess from '@/routes/address/index';
 import type { NavItem } from '@/types';
 
 // 👇 Controle de hidratação (SSR vs Client)
@@ -60,6 +64,18 @@ const paymentsUrl = computed(() =>
         : '/',
 );
 
+const clientsUrl = computed(() =>
+    page.props.currentTeam
+        ? client.index(page.props.currentTeam.slug).url
+        : '/',
+);
+
+const addressessUrl = computed(() =>
+    page.props.currentTeam
+        ? adressess.index(page.props.currentTeam.slug).url
+        : '/',
+);
+
 const mainNavItems = computed<NavItem[]>(() => [
     {
         title: 'Dashboard',
@@ -80,6 +96,16 @@ const mainNavItems = computed<NavItem[]>(() => [
         title: 'Pagamentos',
         href: paymentsUrl.value,
         icon: Wallet,
+    },
+    {
+        title: 'Clientes',
+        href: clientsUrl.value,
+        icon: Users,
+    },
+    {
+        title: 'Addresses',
+        href: addressessUrl.value,
+        icon: MapPinHouse,
     },
 ]);
 

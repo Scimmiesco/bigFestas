@@ -36,11 +36,14 @@ defineOptions({
 <template>
     <Head title="Dashboard" />
     <div class="flex flex-1 flex-col gap-2 p-2">
-        <PaymentResume :data="paymentData"></PaymentResume>
+        <PaymentResume
+            :data="paymentData"
+            :team-slug="currentTeam.slug"
+        ></PaymentResume>
         <DeliveryPlanner
             :agenda-semanal="stockResumeData.agenda_semanal"
             :team-slug="currentTeam.slug"
         />
-        <StockResume :data="stockResumeData" />
+        <StockResume :data="stockResumeData" :team-slug="currentTeam.slug" />
     </div>
 </template>

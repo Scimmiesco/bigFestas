@@ -6,10 +6,12 @@ use App\Enums\Rental\RentalStatus;
 use App\Models\Item;
 use App\Models\Team;
 use App\Models\Payment;
+use App\Models\Address;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Rental extends Model
 {
@@ -39,5 +41,10 @@ class Rental extends Model
     public function payment(): HasMany
     {
         return $this->hasMany(Payment::class);
+    }
+
+    public function address(): HasOne
+    {
+        return $this->hasMany(Address::class);
     }
 }
