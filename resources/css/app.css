@@ -110,7 +110,7 @@
     --destructive: hsl(0 84.2% 60.2%);
     --destructive-foreground: hsl(0 0% 98%);
     --border: hsl(0 0% 3.9%);
-    --input: hsl(0 0% 89.8%);
+    --input: var(--primary);
     --ring: hsl(0 0% 3.9%);
     --chart-1: hsl(12 75% 45%);
     --chart-2: hsl(173 75% 33%);
@@ -177,5 +177,86 @@
     h2,
     h3 {
         @apply text-primary;
+    }
+
+    select,
+    ::picker(select) {
+        appearance: base-select;
+    }
+
+    select::picker-icon {
+        color: var(--primary);
+        transition: 0.4s rotate;
+    }
+
+    select:open::picker-icon {
+        rotate: 180deg;
+    }
+
+    ::picker(select) {
+        border: none;
+    }
+
+    select {
+        flex: 1;
+    }
+
+    option {
+        @apply flex w-full flex-1 grow gap-4 justify-self-start border p-2 transition duration-500 ease-in;
+    }
+    option:first-of-type {
+        border-radius: 8px 8px 0 0;
+    }
+
+    option:last-of-type {
+        border-radius: 0 0 8px 8px;
+    }
+
+    ::picker(select) {
+        border-radius: 8px;
+    }
+
+    option:not(option:last-of-type) {
+        border-bottom: none;
+    }
+    option:nth-of-type(odd) {
+        @apply bg-amber-900/15;
+    }
+
+    option:hover,
+    option:focus {
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    option .icon {
+        font-size: 1.6rem;
+        text-box: trim-both cap alphabetic;
+    }
+    selectedcontent .icon {
+        display: none;
+    }
+    option:checked {
+        font-weight: bold;
+    }
+    option::checkmark {
+        order: 1;
+        margin-left: auto;
+        content: '☑️';
+    }
+    ::picker(select) {
+        opacity: 0;
+        transition: all 0.4s allow-discrete;
+    }
+    :open::picker(select) {
+        opacity: 1;
+    }
+    @starting-style {
+        :open::picker(select) {
+            opacity: 0;
+        }
+    }
+    ::picker(select) {
+        top: calc(anchor(bottom) + 1px);
+        left: anchor(10%);
     }
 }

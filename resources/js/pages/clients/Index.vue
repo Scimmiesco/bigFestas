@@ -4,7 +4,7 @@ import { Plus, Pencil, Trash2 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-import client from '@/routes/client/index';
+import clients from '@/routes/clients/index';
 import type { Team } from '@/types';
 
 interface Client {
@@ -31,14 +31,14 @@ defineOptions({
             {
                 title: 'Clientes',
                 href: pageProps.currentTeam?.slug
-                    ? client.index.url(pageProps.currentTeam.slug)
+                    ? clients.index.url(pageProps.currentTeam.slug)
                     : '/',
             },
         ],
     }),
 });
 
-const page = usePage();
+const page = usePage(); 
 const teamSlug = computed(() => page.props.currentTeam?.slug);
 
 // --- MÉTODO DE EXCLUSÃO INDIVIDUAL ---

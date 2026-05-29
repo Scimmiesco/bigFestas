@@ -25,12 +25,12 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import client from '@/routes/client/index';
+import addresses from '@/routes/addresses/index';
+import client from '@/routes/clients/index';
 import dashboard from '@/routes/dashboard/index';
 import item from '@/routes/items/index';
 import payment from '@/routes/payment/index';
 import rentals from '@/routes/rentals/index';
-import adressess from '@/routes/address/index';
 import type { NavItem } from '@/types';
 
 // 👇 Controle de hidratação (SSR vs Client)
@@ -70,9 +70,9 @@ const clientsUrl = computed(() =>
         : '/',
 );
 
-const addressessUrl = computed(() =>
+const addressesUrl = computed(() =>
     page.props.currentTeam
-        ? adressess.index(page.props.currentTeam.slug).url
+        ? addresses.index(page.props.currentTeam.slug).url
         : '/',
 );
 
@@ -103,8 +103,8 @@ const mainNavItems = computed<NavItem[]>(() => [
         icon: Users,
     },
     {
-        title: 'Addresses',
-        href: addressessUrl.value,
+        title: 'Endereços',
+        href: addressesUrl.value,
         icon: MapPinHouse,
     },
 ]);

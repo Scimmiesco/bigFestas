@@ -3,7 +3,7 @@ import { Head, usePage } from '@inertiajs/vue3';
 import Heading from '@/components/Heading.vue';
 import itemsRoutes from '@/routes/items/index';
 import type { Team } from '@/types';
-import Form from './Partials/Form.vue'; // Ajuste o caminho
+import Form from './partials/Form.vue'; // Ajuste o caminho
 
 const props = defineProps<{
     item: any;

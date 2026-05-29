@@ -1,5 +1,23 @@
 @layer components {
-    .form-container {
-        @apply flex flex-col space-y-2 p-1;
+    /* Estrutura do Formulário */
+    .form-wrapper {
+        @apply flex max-w-2xl flex-col gap-2 space-y-3 rounded border px-3 py-2;
+    }
+
+    .form-actions {
+        @apply mt-3 flex items-center justify-end gap-2 border-t pt-3;
+    }
+
+    /* Elementos de Input, Label e Select */
+    .form-label {
+        @apply block text-sm font-medium;
+    }
+
+    .form-required-asterisk {
+        @apply text-chart-1;
+    }
+
+    .form-input {
+        @apply flex h-10 w-full rounded border px-3 py-2 text-sm transition-colors placeholder:text-amber-900/60 focus:border-amber-500 focus:ring-2 focus:ring-amber-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
     }
 }

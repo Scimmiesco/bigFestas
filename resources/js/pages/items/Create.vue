@@ -4,7 +4,7 @@ import Heading from '@/components/Heading.vue';
 
 import itemsRoutes from '@/routes/items/index';
 import type { Team } from '@/types';
-import Form from './Partials/Form.vue'; // Ajuste o caminho conforme onde você salvou
+import Form from './partials/Form.vue'; // Ajuste o caminho conforme onde você salvou
 
 const props = defineProps<{
     enums?: any;

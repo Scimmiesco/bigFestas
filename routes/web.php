@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Clients\ClientController;
-use App\Http\Controllers\Adressess\AddressController;
+use App\Http\Controllers\Addresses\AddressController;
 use App\Http\Controllers\Items\ItemController;
 use App\Http\Controllers\Payment\PaymentController;
 use App\Http\Controllers\Rentals\RentalController;
@@ -40,10 +40,13 @@ Route::prefix('{current_team}')
         Route::get('pagamentos/criar', [PaymentController::class, 'create'])->name('payment.create');
         Route::post('pagamentos', [PaymentController::class, 'store'])->name('payment.store');
 
-        Route::get('clientes', [ClientController::class, 'index'])->name('client.index');
+        Route::get('clientes', [ClientController::class, 'index'])->name('clients.index');
+        Route::get('clientes/criar', [ClientController::class, 'create'])->name('clients.create');
+        Route::get('clientes/editar', [ClientController::class, 'edit'])->name('clients.edit');
 
-        
-        Route::get('enderecos', [AddressController::class, 'index'])->name('client.index');
+        Route::get('enderecos', [AddressController::class, 'index'])->name('addresses.index');
+        Route::get('enderecos/criar', [AddressController::class, 'create'])->name('addresses.create');
+        Route::get('enderecos/editar', [AddressController::class, 'edit'])->name('addresses.edit');
     });
 
 Route::middleware(['auth'])->group(function () {

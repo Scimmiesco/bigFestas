@@ -4,9 +4,9 @@ import { Plus, Pencil, Trash2, MapPin } from 'lucide-vue-next';
 import { computed } from 'vue';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-// Assumindo que você tenha suas rotas configuradas para endereços
-import address from '@/routes/address/index';
 import type { Team } from '@/types';
+// Assumindo que você tenha suas rotas configuradas para endereços
+import addresses from '@/routes/addresses/index';
 
 interface Client {
     id: number;

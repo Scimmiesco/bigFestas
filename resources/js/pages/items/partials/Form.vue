@@ -2,10 +2,10 @@
 import { useForm, Link } from '@inertiajs/vue3';
 import { Save, X, Plus } from 'lucide-vue-next';
 import { computed } from 'vue';
+
+// Usando o 'c' minúsculo conforme corrigimos anteriormente
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import itemsRoutes from '@/routes/items/index';
 
 const props = defineProps<{
@@ -48,25 +48,28 @@ const submit = () => {
 
 <template>
     <div class="form-container">
-        <div v-if="isBulkEdit" class="m-2 rounded border p-2 text-sm">
+        <div
+            v-if="isBulkEdit"
+            class="mb-6 rounded-md border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600"
+        >
             <strong>Modo de Edição em Lote:</strong> Preencha apenas os campos
             que deseja alterar para todos os {{ form.ids.length }} itens
             selecionados. Deixe em branco os campos que devem manter seus
             valores originais.
         </div>
 
-        <form
-            @submit.prevent="submit"
-            class="flex flex-col gap-2 rounded bg-primary px-3 py-2 text-primary-foreground"
-        >
-            <div class="space-y-2">
-                <Label for="nome" class="">
+        <form @submit.prevent="submit" class="form-wrapper">
+            <div>
+                <label for="nome" class="form-label">
                     Nome do Item
-                    <span v-if="!isBulkEdit" class="text-chart-1">*</span>
-                </Label>
-                <Input
+                    <span v-if="!isBulkEdit" class="form-required-asterisk"
+                        >*</span
+                    >
+                </label>
+                <input
                     id="nome"
-                    class="bg-primary-foreground text-foreground focus-visible:ring-2 focus-visible:ring-chart-5"
+                    type="text"
+                    class="form-input"
                     v-model="form.nome"
                     :placeholder="
                         isBulkEdit
@@ -76,32 +79,35 @@ const submit = () => {
                     :required="!isBulkEdit"
                     :autofocus="!isBulkEdit"
                 />
-                <InputError :message="form.errors.nome" />
+                <InputError :message="form.errors.nome" class="mt-2" />
             </div>
 
-            <div v-if="!isEdit" class="grid gap-2 md:col-span-3">
-                <Label for="quantidade">Quantidade</Label>
-                <Input
+            <div v-if="!isEdit">
+                <label for="quantidade" class="form-label">Quantidade</label>
+                <input
                     id="quantidade"
                     type="number"
                     min="1"
                     max="200"
                     v-model="form.quantidade"
+                    class="form-input"
                     required
                 />
-                <InputError :message="form.errors.quantidade" />
+                <InputError :message="form.errors.quantidade" class="mt-2" />
             </div>
 
             <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div class="grid gap-2">
-                    <Label for="tipo">
+                <div>
+                    <label for="tipo" class="form-label">
                         Tipo
-                        <span v-if="!isBulkEdit" class="text-red-500">*</span>
-                    </Label>
+                        <span v-if="!isBulkEdit" class="form-required-asterisk"
+                            >*</span
+                        >
+                    </label>
                     <select
                         id="tipo"
                         v-model="form.tipo"
-                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        class="form-input"
                         :required="!isBulkEdit"
                     >
                         <option value="" :disabled="!isBulkEdit">
@@ -119,18 +125,20 @@ const submit = () => {
                             {{ tipo.name }}
                         </option>
                     </select>
-                    <InputError :message="form.errors.tipo" />
+                    <InputError :message="form.errors.tipo" class="mt-2" />
                 </div>
 
-                <div class="grid gap-2">
-                    <Label for="status">
+                <div>
+                    <label for="status" class="form-label">
                         Status
-                        <span v-if="!isBulkEdit" class="text-red-500">*</span>
-                    </Label>
+                        <span v-if="!isBulkEdit" class="form-required-asterisk"
+                            >*</span
+                        >
+                    </label>
                     <select
                         id="status"
                         v-model="form.status"
-                        class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                        class="form-input"
                         :required="!isBulkEdit"
                     >
                         <option value="" :disabled="!isBulkEdit">
@@ -148,58 +156,56 @@ const submit = () => {
                             {{ status.name }}
                         </option>
                     </select>
-                    <InputError :message="form.errors.status" />
+                    <InputError :message="form.errors.status" class="mt-2" />
                 </div>
             </div>
 
-            <div class="grid gap-2">
-                <Label for="observacoes">Observações (Opcional)</Label>
+            <div>
+                <label for="observacoes" class="form-label"
+                    >Observações (Opcional)</label
+                >
                 <textarea
                     id="observacoes"
                     v-model="form.observacoes"
                     rows="3"
-                    class="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
+                    class="form-input"
                     :placeholder="
                         isBulkEdit
                             ? 'Deixe em branco para manter original'
                             : 'Detalhes adicionais...'
                     "
                 ></textarea>
-                <InputError :message="form.errors.observacoes" />
+                <InputError :message="form.errors.observacoes" class="mt-2" />
             </div>
 
-            <div
-                class="mt-6 flex items-center justify-end gap-4 border-t pt-6 dark:border-sidebar-border"
-            >
+            <div class="form-actions">
                 <Button
                     v-if="isBulkEdit"
                     type="button"
                     variant="outline"
                     @click="emit('cancel')"
-                    class="flex items-center gap-2 text-foreground"
+                    class="gap-2"
                 >
                     <X class="h-4 w-4" /> Cancelar Lote
                 </Button>
-                <Button v-else type="button" variant="outline" as-child>
-                    <Link
-                        :href="itemsRoutes.index.url(teamSlug)"
-                        class="flex items-center gap-2 text-foreground"
-                    >
+
+                <Button variant="outline" v-else as-child>
+                    <Link :href="itemsRoutes.index.url(teamSlug)" class="gap-2">
                         <X class="h-4 w-4" /> Cancelar
                     </Link>
                 </Button>
-
                 <Button
+                    variant="default"
                     type="submit"
                     :disabled="form.processing"
-                    class="flex items-center gap-2"
+                    class="gap-2"
                 >
                     <component :is="isEdit ? Save : Plus" class="h-4 w-4" />
                     {{
                         form.processing
                             ? 'Salvando...'
                             : isBulkEdit
-                              ? 'Atualizar Itens Selecionados'
+                              ? 'Atualizar Selecionados'
                               : isSingleEdit
                                 ? 'Atualizar Item'
                                 : 'Salvar Item'

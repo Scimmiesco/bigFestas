@@ -8,7 +8,7 @@ import itemsRoutes from '@/routes/items/index';
 import type { Team } from '@/types';
 
 // Importando o formulário unificado
-import ItemForm from './Partials/Form.vue';
+import ItemForm from './partials/Form.vue';
 
 interface Item {
     id: number;
