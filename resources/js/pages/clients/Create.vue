@@ -1,3 +1,7 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Form from './partials/Form.vue';
+</script>
 
-<template>sa</template>
+<template>
+    <Form :teamSlug="'ffas'" :client="''" :enums="''"/>
+</template>

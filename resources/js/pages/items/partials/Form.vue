@@ -48,10 +48,7 @@ const submit = () => {
 
 <template>
     <div class="form-container">
-        <div
-            v-if="isBulkEdit"
-            class="mb-6 rounded-md border border-gray-200 bg-gray-50 p-4 text-sm text-gray-600"
-        >
+        <div v-if="isBulkEdit" class="info-container">
             <strong>Modo de Edição em Lote:</strong> Preencha apenas os campos
             que deseja alterar para todos os {{ form.ids.length }} itens
             selecionados. Deixe em branco os campos que devem manter seus

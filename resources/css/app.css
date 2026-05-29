@@ -257,6 +257,10 @@
     }
     ::picker(select) {
         top: calc(anchor(bottom) + 1px);
-        left: anchor(10%);
+        left: anchor(0%);
+    }
+
+    .info-container {
+        @apply my-2 rounded border bg-amber-200 px-3 py-2;
     }
 }
