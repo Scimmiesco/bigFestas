@@ -4,9 +4,9 @@ import { Plus, Pencil, Trash2, MapPin } from 'lucide-vue-next';
 import { computed } from 'vue';
 import Heading from '@/components/Heading.vue';
 import { Button } from '@/components/ui/button';
-import type { Team } from '@/types';
 // Assumindo que você tenha suas rotas configuradas para endereços
 import addresses from '@/routes/addresses/index';
+import type { Team } from '@/types';
 
 interface Client {
     id: number;
@@ -42,7 +42,7 @@ defineOptions({
             {
                 title: 'Endereços',
                 href: pageProps.currentTeam?.slug
-                    ? address.index.url(pageProps.currentTeam.slug)
+                    ? addresses.index.url(pageProps.currentTeam.slug)
                     : '/',
             },
         ],

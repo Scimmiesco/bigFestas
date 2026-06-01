@@ -37,7 +37,7 @@ class AddressController extends Controller
     {
         return Inertia::render('addresses/Create', [
             // Envia a lista de clientes para o select do formulário
-            'clients' => Client::select('id', 'nome')->orderBy('nome')->get(),
+            'clients' => Client::query()->select('id', 'nome')->orderBy('nome')->get(),
             // Envia os tipos de endereço mapeados para o select (Ex: Residencial, Comercial)
             'enums' => [
                 'address_types' => 'fasfsa'

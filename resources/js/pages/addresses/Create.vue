@@ -1,3 +1,5 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Form from './partials/Form.vue';
+</script>
 
-<template>sa</template>
+<template><Form :data="''" :enums="''" :teamSlug="''"></Form></template>
