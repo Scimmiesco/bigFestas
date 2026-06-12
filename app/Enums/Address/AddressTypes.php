@@ -17,4 +17,9 @@ enum AddressTypes: string
             self::Locacao => 'Locação',
         };
     }
+
+    public static function options(): array
+    {
+        return array_map(fn($case) => ['value' => $case->value, 'label' => $case->label()], self::cases());
+    }
 }

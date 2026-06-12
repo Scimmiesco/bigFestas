@@ -36,17 +36,13 @@ class ClientController extends Controller
     }
 
     public function create(Team $currentTeam): Response
-        {
-            return Inertia::render('clients/Create', [
-                'enums' => [
-                    // Aqui você simula (ou substitui pelo seu Enum real no futuro)
-                    'client_types' => [
-                        'PF' => 'Pessoa Física',
-                        'PJ' => 'Pessoa Jurídica',
-                    ]
-                ]
-            ]);
-        }
+    {
+        return Inertia::render('clients/Create', [
+            'enums' => [
+                'client_types' => ClientTypes::options()
+            ]
+        ]);
+    }
     /**
      * Salva o novo cliente no banco de dados.
      */
@@ -60,8 +56,7 @@ class ClientController extends Controller
             'cpf_cnpj' => ['required', 'string', 'max:20', 'unique:clients,cpf_cnpj'],
         ]);
 
-        // Se houver relação com Time, adicione: $validated['team_id'] = $currentTeam->id;
-        // Client::create($validated);
+        Client::create($validated);
 
         return redirect()->route('clients.index')
             ->with('success', 'Cliente cadastrado com sucesso!');
@@ -87,6 +82,9 @@ class ClientController extends Controller
     {
         return Inertia::render('clients/Edit', [
             'client' => $client,
+            'enums' => [
+                'client_types' => ClientTypes::options()
+            ]
         ]);
     }
 

@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rule;
 
 class AddressController extends Controller
 {
@@ -40,7 +41,7 @@ class AddressController extends Controller
             'clients' => Client::query()->select('id', 'nome')->orderBy('nome')->get(),
             // Envia os tipos de endereço mapeados para o select (Ex: Residencial, Comercial)
             'enums' => [
-                'address_types' => 'fasfsa'
+                'address_types' => AddressTypes::options()
             ]
         ]);
     }
@@ -52,14 +53,14 @@ class AddressController extends Controller
     {
         $validated = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'tipo' => 'required|string', // Ajuste a validação conforme o seu Enum
+            'tipo_endereco' => ['required', Rule::enum(AddressTypes::class)],
             'cep' => 'required|string|max:10',
             'logradouro' => 'required|string|max:255',
             'numero' => 'required|string|max:20',
             'complemento' => 'nullable|string|max:255',
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
-            'estado' => 'required|string|max:2',
+            'uf' => 'required|string|max:2',
         ]);
 
         Address::create($validated);
@@ -89,7 +90,7 @@ class AddressController extends Controller
             'address' => $address,
             'clients' => Client::query()->select('id', 'nome')->orderBy('nome')->get(),
             'enums' => [
-                'address_types' => 'AddressTypes::options()',
+                'address_types' => AddressTypes::options(),
             ]
         ]);
     }
@@ -101,14 +102,14 @@ class AddressController extends Controller
     {
         $validated = $request->validate([
             'client_id' => 'required|exists:clients,id',
-            'tipo' => 'required|string',
+            'tipo_endereco' => ['required', Rule::enum(AddressTypes::class)],
             'cep' => 'required|string|max:10',
             'logradouro' => 'required|string|max:255',
             'numero' => 'required|string|max:20',
             'complemento' => 'nullable|string|max:255',
             'bairro' => 'required|string|max:255',
             'cidade' => 'required|string|max:255',
-            'estado' => 'required|string|max:2',
+            'uf' => 'required|string|max:2',
         ]);
 
         $address->update($validated);

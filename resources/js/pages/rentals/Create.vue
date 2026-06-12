@@ -8,12 +8,25 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import type { Team } from '@/types';
 
-// O Vue recebe exatamente a prop 'estoqueDisponivel' que o Controller mandou
 const props = defineProps<{
-    estoqueDisponivel: {
-        cadeiras: number;
-        mesas: number;
-    };
+    estoqueDisponivel: Array<{
+        type: string;
+        label: string;
+        available: number;
+    }>;
+    clients: Array<{
+        id: number;
+        nome: string;
+        addresses: Array<{
+            id: number;
+            tipo_endereco: string;
+            logradouro: string;
+            numero: string;
+            bairro: string;
+            cidade: string;
+            uf: string;
+        }>;
+    }>;
 }>();
 
 const page = usePage();
@@ -39,48 +52,32 @@ defineOptions({
 
 // Iniciando o formulário com TODOS os campos, incluindo as observações
 const form = useForm({
-    cliente_nome: '',
-    cep: '',
-    endereco_entrega: '',
+    client_id: '',
+    address_id: '',
     data_entrega: '',
     data_recolha: '',
-    qtd_cadeiras: 0,
-    qtd_mesas: 0,
+    items: {} as Record<string, number>,
     valor: 0,
     observacoes: '',
 });
 
-const buscandoCep = ref(false);
+// Inicializa a contagem de todos os itens com 0
+props.estoqueDisponivel.forEach(item => {
+    form.items[item.type] = 0;
+});
 
-const buscarCep = async () => {
-    // Tira qualquer traço ou ponto que o usuário tenha digitado
-    const cepLimpo = form.cep.replace(/\D/g, '');
+// Computed para filtrar os endereços com base no cliente selecionado
+const availableAddresses = computed(() => {
+    const client = props.clients.find(c => c.id === form.client_id);
+    return client ? client.addresses : [];
+});
 
-    // Verifica se tem 8 números
-    if (cepLimpo.length === 8) {
-        buscandoCep.value = true;
-
-        try {
-            const response = await fetch(
-                `https://viacep.com.br/ws/${cepLimpo}/json/`,
-            );
-            const data = await response.json();
-
-            if (!data.erro) {
-                form.endereco_entrega = `${data.logradouro}, XXXX - ${data.bairro}, ${data.localidade}/${data.uf}`;
-
-                // Limpa o erro caso houvesse algum
-                form.errors.endereco_entrega = undefined;
-            } else {
-                form.errors.cep = 'CEP não encontrado.';
-            }
-        } catch (error) {
-            form.errors.cep = 'Erro ao buscar o CEP.';
-        } finally {
-            buscandoCep.value = false;
-        }
-    }
+// Reseta o endereço se o cliente mudar
+const onClientChange = () => {
+    form.address_id = '';
 };
+
+
 
 // Envia os dados para o método store do RentalController
 const submit = () => {
@@ -113,54 +110,48 @@ const submit = () => {
 
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-12">
                         <div class="grid gap-2 md:col-span-6">
-                            <Label for="cliente_nome"
-                                >Nome do Cliente
+                            <Label for="client_id"
+                                >Cliente
                                 <span class="text-red-500">*</span></Label
                             >
-                            <Input
-                                id="cliente_nome"
-                                v-model="form.cliente_nome"
-                                placeholder="Ex: João da Silva"
+                            <select
+                                id="client_id"
+                                v-model="form.client_id"
+                                @change="onClientChange"
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                 required
-                                autofocus
-                            />
-                            <InputError :message="form.errors.cliente_nome" />
-                        </div>
-
-                        <div class="grid gap-2 md:col-span-2">
-                            <Label for="cep">CEP</Label>
-                            <div class="relative">
-                                <Input
-                                    id="cep"
-                                    v-model="form.cep"
-                                    placeholder="00000-000"
-                                    maxlength="9"
-                                    @blur="buscarCep"
-                                    :disabled="buscandoCep"
-                                />
-                            </div>
-                            <span
-                                v-if="buscandoCep"
-                                class="animate-pulse text-xs text-blue-500"
-                                >Buscando...</span
                             >
-                            <InputError :message="form.errors.cep" />
+                                <option value="" disabled selected>Selecione um cliente</option>
+                                <option v-for="client in clients" :key="client.id" :value="client.id">
+                                    {{ client.nome }}
+                                </option>
+                            </select>
+                            <InputError :message="form.errors.client_id" />
                         </div>
 
-                        <div class="grid gap-2 md:col-span-4">
-                            <Label for="endereco_entrega"
-                                >Endereço Completo
+                        <div class="grid gap-2 md:col-span-6">
+                            <Label for="address_id"
+                                >Endereço de Entrega
                                 <span class="text-red-500">*</span></Label
                             >
-                            <Input
-                                id="endereco_entrega"
-                                v-model="form.endereco_entrega"
-                                placeholder="Ex: Rua das Flores, 123 - Centro"
+                            <select
+                                id="address_id"
+                                v-model="form.address_id"
+                                class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                :disabled="!form.client_id"
                                 required
-                            />
-                            <InputError
-                                :message="form.errors.endereco_entrega"
-                            />
+                            >
+                                <option value="" disabled selected>
+                                    {{ form.client_id ? 'Selecione um endereço' : 'Selecione um cliente primeiro' }}
+                                </option>
+                                <option v-for="address in availableAddresses" :key="address.id" :value="address.id">
+                                    {{ address.logradouro }}, {{ address.numero }} - {{ address.bairro }}, {{ address.cidade }}/{{ address.uf }}
+                                </option>
+                            </select>
+                            <InputError :message="form.errors.address_id" />
+                            <p v-if="form.client_id && availableAddresses.length === 0" class="text-xs text-red-500 mt-1">
+                                Este cliente não possui endereços cadastrados. <Link :href="`/${teamSlug}/enderecos/criar`" class="underline">Cadastrar endereço</Link>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -208,53 +199,27 @@ const submit = () => {
                         Itens para Alugar
                     </h3>
                     <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-                        <div class="grid gap-2">
+                        <div v-for="item in props.estoqueDisponivel" :key="item.type" class="grid gap-2">
                             <Label
-                                for="qtd_mesas"
+                                :for="'qtd_' + item.type"
                                 class="text-amber-900 dark:text-amber-200"
-                                >Quantidade de Mesas</Label
+                                >Quantidade de {{ item.label }}</Label
                             >
                             <Input
-                                id="qtd_mesas"
+                                :id="'qtd_' + item.type"
                                 type="number"
                                 min="0"
-                                :max="props.estoqueDisponivel.mesas"
-                                v-model="form.qtd_mesas"
+                                :max="item.available"
+                                v-model="form.items[item.type]"
                                 class="bg-white dark:bg-gray-900"
                             />
                             <p
                                 class="text-xs text-amber-700 dark:text-amber-400"
                             >
                                 Disponíveis em estoque:
-                                <strong>{{
-                                    props.estoqueDisponivel.mesas
-                                }}</strong>
+                                <strong>{{ item.available }}</strong>
                             </p>
-                            <InputError :message="form.errors.qtd_mesas" />
-                        </div>
-                        <div class="grid gap-2">
-                            <Label
-                                for="qtd_cadeiras"
-                                class="text-amber-900 dark:text-amber-200"
-                                >Quantidade de Cadeiras</Label
-                            >
-                            <Input
-                                id="qtd_cadeiras"
-                                type="number"
-                                min="0"
-                                :max="props.estoqueDisponivel.cadeiras"
-                                v-model="form.qtd_cadeiras"
-                                class="bg-white dark:bg-gray-900"
-                            />
-                            <p
-                                class="text-xs text-amber-700 dark:text-amber-400"
-                            >
-                                Disponíveis em estoque:
-                                <strong>{{
-                                    props.estoqueDisponivel.cadeiras
-                                }}</strong>
-                            </p>
-                            <InputError :message="form.errors.qtd_cadeiras" />
+                            <InputError :message="form.errors['items.' + item.type]" />
                         </div>
                     </div>
                 </div>

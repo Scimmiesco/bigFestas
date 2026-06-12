@@ -21,12 +21,12 @@ class StoreRentalRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'cliente_nome' => ['required', 'string', 'max:255'],
-            'endereco_entrega' => ['required', 'string', 'max:500'],
+            'client_id' => ['required', 'exists:clients,id'],
+            'address_id' => ['required', 'exists:addresses,id'],
             'data_entrega' => ['required', 'date'],
             'data_recolha' => ['required', 'date', 'after:data_entrega'],
-            'qtd_cadeiras' => ['required', 'integer', 'min:0'],
-            'qtd_mesas' => ['required', 'integer', 'min:0'],
+            'items' => ['required', 'array'],
+            'items.*' => ['required', 'integer', 'min:0'],
             'valor' => ['min:0']
         ];
     }

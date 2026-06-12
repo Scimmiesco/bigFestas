@@ -12,10 +12,10 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Client extends Model
 {
-    protected  $fillable = [
-    'nome',
-    'natureza_juridica',
-    'cpf_cnpj',
+    protected $fillable = [
+        'nome',
+        'natureza_juridica',
+        'cpf_cnpj',
     ];
 
     protected function casts(): array

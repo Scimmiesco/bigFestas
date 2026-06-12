@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Rental extends Model
 {
     protected $fillable = [
-        'team_id', 'cliente_nome', 'endereco_entrega',
+        'team_id', 'client_id', 'address_id', 'cliente_nome', 'endereco_entrega',
         'data_entrega', 'data_recolha', 'status', 'valor', 'observacoes'
     ];
 
@@ -43,8 +43,13 @@ class Rental extends Model
         return $this->hasMany(Payment::class);
     }
 
-    public function address(): HasOne
+    public function client(): BelongsTo
     {
-        return $this->hasMany(Address::class);
+        return $this->belongsTo(Client::class);
+    }
+
+    public function address(): BelongsTo
+    {
+        return $this->belongsTo(Address::class);
     }
 }

@@ -36,22 +36,22 @@ class RentalController extends Controller
     }
     public function create(Team $current_team)
         {
-            // 1. Uso dos Enums nas consultas: código mais seguro e sem risco de erro de digitação
-            $estoqueDisponivel = [
-                'cadeiras' => $current_team->items()
-                    ->where('tipo', ItemType::Cadeira) // Adapte para a sintaxe exata do seu Enum
-                    ->where('status', ItemStatus::Disponivel)
-                    ->count(),
-
-                'mesas' => $current_team->items()
-                    ->where('tipo', ItemType::Mesa)
-                    ->where('status', ItemStatus::Disponivel)
-                    ->count(),
-            ];
+            // 1. Uso dinâmico do Enum para carregar os itens em estoque disponíveis
+            $estoqueDisponivel = collect(ItemType::cases())->map(function ($case) use ($current_team) {
+                return [
+                    'type' => $case->value,
+                    'label' => $case->label(),
+                    'available' => $current_team->items()
+                        ->where('tipo', $case)
+                        ->where('status', ItemStatus::Disponivel)
+                        ->count()
+                ];
+            });
 
             // Certifique-se de que a capitalização (Rentals) bate com o nome da pasta no Vue
             return Inertia::render('rentals/Create', [
-                'estoqueDisponivel' => $estoqueDisponivel
+                'estoqueDisponivel' => $estoqueDisponivel,
+                'clients' => \App\Models\Client::with('addresses')->orderBy('nome')->get()
             ]);
         }
 
@@ -63,8 +63,8 @@ class RentalController extends Controller
 
                 // A. Cria a Locação
                 $rental = $current_team->rentals()->create([
-                    'cliente_nome' => $validated['cliente_nome'],
-                    'endereco_entrega' => $validated['endereco_entrega'],
+                    'client_id' => $validated['client_id'],
+                    'address_id' => $validated['address_id'],
                     'data_entrega' => $validated['data_entrega'],
                     'data_recolha' => $validated['data_recolha'],
                     'valor' => $validated['valor'],
@@ -88,9 +88,15 @@ class RentalController extends Controller
                     }
                 };
 
-                // C. Chamamos a mesma função para Cadeiras e Mesas
-                $separarItensParaLocacao(ItemType::Cadeira, $validated['qtd_cadeiras']);
-                $separarItensParaLocacao(ItemType::Mesa, $validated['qtd_mesas']);
+                // C. Iterar sobre todos os itens submetidos de forma dinâmica
+                if (isset($validated['items']) && is_array($validated['items'])) {
+                    foreach ($validated['items'] as $typeValue => $quantidadeDesejada) {
+                        $enumCase = ItemType::tryFrom($typeValue);
+                        if ($enumCase && $quantidadeDesejada > 0) {
+                            $separarItensParaLocacao($enumCase, $quantidadeDesejada);
+                        }
+                    }
+                }
             });
 
             Inertia::flash('toast', ['type' => 'success', 'message' => 'Locação agendada com sucesso!']);

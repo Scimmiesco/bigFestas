@@ -18,7 +18,7 @@ Route::inertia('/', 'Welcome', [
 Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])
     ->group(function () {
-        Route::get('dashboard',[DashboardController::class, 'index'])->name('dashboard.index');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
         Route::get('itens', [ItemController::class, 'index'])->name('items.index');
         Route::get('itens/criar', [ItemController::class, 'create'])->name('items.create');
@@ -30,7 +30,7 @@ Route::prefix('{current_team}')
 
 
         // ...suas outras rotas (edit, update, destroy)
-
+    
         Route::get('locacoes', [RentalController::class, 'index'])->name('rentals.index');
         Route::get('locacoes/criar', [RentalController::class, 'create'])->name('rentals.create');
         Route::post('locacoes', [RentalController::class, 'store'])->name('rentals.store');
@@ -42,15 +42,22 @@ Route::prefix('{current_team}')
 
         Route::get('clientes', [ClientController::class, 'index'])->name('clients.index');
         Route::get('clientes/criar', [ClientController::class, 'create'])->name('clients.create');
-        Route::get('clientes/editar', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::get('clientes/{client}/editar', [ClientController::class, 'edit'])->name('clients.edit');
+        Route::post('clientes', [ClientController::class, 'store'])->name('clients.store');
+        Route::put('clientes/{client}', [ClientController::class, 'update'])->name('clients.update');
+        Route::delete('clientes/{client}', [ClientController::class, 'destroy'])->name('clients.destroy');
 
         Route::get('enderecos', [AddressController::class, 'index'])->name('addresses.index');
         Route::get('enderecos/criar', [AddressController::class, 'create'])->name('addresses.create');
-        Route::get('enderecos/editar', [AddressController::class, 'edit'])->name('addresses.edit');
+        Route::post('enderecos', [AddressController::class, 'store'])->name('addresses.store');
+        Route::get('enderecos/{address}', [AddressController::class, 'show'])->name('addresses.show');
+        Route::get('enderecos/{address}/editar', [AddressController::class, 'edit'])->name('addresses.edit');
+        Route::put('enderecos/{address}', [AddressController::class, 'update'])->name('addresses.update');
+        Route::delete('enderecos/{address}', [AddressController::class, 'destroy'])->name('addresses.destroy');
     });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])->name('invitations.accept');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

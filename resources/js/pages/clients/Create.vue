@@ -6,6 +6,10 @@ import Form from './partials/Form.vue';
 
 const page = usePage();
 const teamSlug = page.props.currentTeam?.slug as string;
+
+const props = defineProps<{
+    enums?: any;
+}>();
 </script>
 
 <template>
@@ -19,6 +23,6 @@ const teamSlug = page.props.currentTeam?.slug as string;
                 description="Preencha os detalhes abaixo para registrar um novo cliente."
             />
         </div>
-        <Form :teamSlug="teamSlug" :client="''" :enums="''" />
+        <Form :teamSlug="teamSlug" :enums="enums" />
     </div>
 </template>
