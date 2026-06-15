@@ -27,6 +27,74 @@ class Rental extends Model
         'status' => RentalStatus::class,
         ];
 
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::creating(function (Rental $rental) {
+            if (empty($rental->cliente_nome) && $rental->client_id) {
+                $rental->cliente_nome = $rental->client?->nome;
+            }
+            if (empty($rental->endereco_entrega) && $rental->address_id) {
+                $address = $rental->address;
+                if ($address) {
+                    $rental->endereco_entrega = sprintf(
+                        '%s, %s - %s, %s/%s',
+                        $address->logradouro,
+                        $address->numero,
+                        $address->bairro,
+                        $address->cidade,
+                        $address->uf
+                    );
+                }
+            }
+        });
+
+        static::updating(function (Rental $rental) {
+            if ($rental->isDirty('client_id') && $rental->client_id) {
+                $rental->cliente_nome = $rental->client?->nome;
+            }
+            if ($rental->isDirty('address_id') && $rental->address_id) {
+                $address = $rental->address;
+                if ($address) {
+                    $rental->endereco_entrega = sprintf(
+                        '%s, %s - %s, %s/%s',
+                        $address->logradouro,
+                        $address->numero,
+                        $address->bairro,
+                        $address->cidade,
+                        $address->uf
+                    );
+                }
+            }
+        });
+    }
+
+    public function getClienteNomeAttribute($value)
+    {
+        return $value ?? $this->client?->nome;
+    }
+
+    public function getEnderecoEntregaAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        if ($this->address) {
+            return sprintf(
+                '%s, %s - %s, %s/%s',
+                $this->address->logradouro,
+                $this->address->numero,
+                $this->address->bairro,
+                $this->address->cidade,
+                $this->address->uf
+            );
+        }
+
+        return null;
+    }
+
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
